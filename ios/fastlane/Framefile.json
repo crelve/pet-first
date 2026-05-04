@@ -1,0 +1,61 @@
+{
+  "default": {
+    "background": "./background.png",
+    "padding": 50,
+    "title": {
+      "color": "#FFFFFF",
+      "font_size": 72
+    },
+    "keyword": {
+      "color": "#E3F2FD",
+      "font_size": 48
+    }
+  },
+  "data": [
+    {
+      "filter": "01-home",
+      "title": {
+        "text": "Welcome Home"
+      },
+      "keyword": {
+        "text": "Your personalized dashboard"
+      }
+    },
+    {
+      "filter": "02-explore",
+      "title": {
+        "text": "Discover More"
+      },
+      "keyword": {
+        "text": "Explore tailored content"
+      }
+    },
+    {
+      "filter": "03-favorites",
+      "title": {
+        "text": "Save Favorites"
+      },
+      "keyword": {
+        "text": "Quick access to favorites"
+      }
+    },
+    {
+      "filter": "04-profile",
+      "title": {
+        "text": "Your Profile"
+      },
+      "keyword": {
+        "text": "Manage your account"
+      }
+    },
+    {
+      "filter": "05-settings",
+      "title": {
+        "text": "Customize"
+      },
+      "keyword": {
+        "text": "Personalize your experience"
+      }
+    }
+  ]
+}

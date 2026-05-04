@@ -1,0 +1,11 @@
+Terima kasih kerana memuat turun aplikasi kami!
+
+Versi ini merangkumi:
+- Pembetulan pepijat dan peningkatan prestasi
+- Pengalaman pengguna yang dipertingkatkan
+- Peningkatan kestabilan
+
+Jika anda mempunyai sebarang soalan atau maklum balas, sila hubungi kami melalui sokongan dalam aplikasi.
+
+Dasar Privasi: https://kikiki-flutter-template-prod.web.app/privacy.html
+Terma Penggunaan: https://kikiki-flutter-template-prod.web.app/terms.html

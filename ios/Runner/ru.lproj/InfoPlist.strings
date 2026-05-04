@@ -1,0 +1,7 @@
+/* Russian localization */
+"CFBundleDisplayName" = "Zone Meet – Время Встречи";
+"NSUserTrackingUsageDescription" = "Отслеживание используется для показа персонализированной рекламы.";
+"NSMicrophoneUsageDescription" = "Это приложение не использует аудио функции.";
+"NSPhotoLibraryUsageDescription" = "Для сохранения фотографий требуется доступ к библиотеке фотографий.";
+"NSCameraUsageDescription" = "Для съемки фотографий требуется доступ к камере.";
+"NSUserNotificationsUsageDescription" = "Нам нужно разрешение на уведомления, чтобы отправлять вам важные обновления и оповещения.";

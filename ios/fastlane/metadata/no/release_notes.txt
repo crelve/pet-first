@@ -1,0 +1,11 @@
+Takk for at du lastet ned appen vår!
+
+Denne versjonen inkluderer:
+- Feilrettinger og ytelsesforbedringer
+- Forbedret brukeropplevelse
+- Stabilitetsforbedringer
+
+Hvis du har spørsmål eller tilbakemeldinger, kan du kontakte oss via app-supporten.
+
+Personvernserklæring: https://kikiki-flutter-template-prod.web.app/privacy.html
+Bruksvilkår: https://kikiki-flutter-template-prod.web.app/terms.html

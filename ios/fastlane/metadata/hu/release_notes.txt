@@ -1,0 +1,11 @@
+Köszönjük, hogy letöltötted az alkalmazásunkat!
+
+Ez a verzió a következőket tartalmazza:
+- Hibajavítások és teljesítménybeli fejlesztések
+- Továbbfejlesztett felhasználói élmény
+- Stabilitási fejlesztések
+
+Ha bármilyen kérdésed vagy visszajelzésed van, kérjük, vedd fel velünk a kapcsolatot az alkalmazáson belüli támogatáson keresztül.
+
+Adatvédelmi szabályzat: https://kikiki-flutter-template-prod.web.app/privacy.html
+Felhasználási feltételek: https://kikiki-flutter-template-prod.web.app/terms.html

@@ -1,0 +1,7 @@
+/* Malay localization */
+"CFBundleDisplayName" = "Zone Meet – Masa Mesyuarat";
+"NSUserTrackingUsageDescription" = "Penjejakan digunakan untuk memaparkan iklan yang diperibadikan.";
+"NSMicrophoneUsageDescription" = "Aplikasi ini tidak menggunakan ciri audio.";
+"NSPhotoLibraryUsageDescription" = "Akses perpustakaan foto diperlukan untuk menyimpan foto.";
+"NSCameraUsageDescription" = "Akses kamera diperlukan untuk mengambil foto.";
+"NSUserNotificationsUsageDescription" = "Kami memerlukan kebenaran pemberitahuan untuk menghantar kemas kini dan amaran penting kepada anda.";

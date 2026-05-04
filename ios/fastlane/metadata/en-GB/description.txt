@@ -1,0 +1,23 @@
+Welcome to Test App!
+
+A powerful and intuitive app designed to make your life easier.
+
+【Key Features】
+- Simple and intuitive user interface
+- Fast and efficient performance
+- Secure data storage
+- Regular updates and improvements
+- Dark mode support
+
+【Perfect For】
+- Anyone looking for a reliable solution
+- Users who value simplicity and efficiency
+- People who want to streamline their workflow
+
+【Privacy & Security】
+Your data is stored securely on your device.
+
+Privacy Policy: https://kikiki-flutter-template-prod.web.app/privacy.html
+Terms of Use: https://kikiki-flutter-template-prod.web.app/terms.html
+
+Download now and experience the difference!

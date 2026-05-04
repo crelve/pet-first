@@ -1,0 +1,5 @@
+BUNDLE_ID="kikiki.flutter.template"
+APP_ID_UNDER="kikiki_flutter_template"
+MONTHLY_PRODUCT_ID="kikiki_flutter_template_premium_monthly"
+YEARLY_PRODUCT_ID="kikiki_flutter_template_premium_yearly"
+LIFETIME_PRODUCT_ID="kikiki_flutter_template_premium_lifetime"

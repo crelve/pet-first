@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Flutter Template - A production-ready Flutter template with Firebase integration. Build your next app faster.">
+    <meta name="keywords" content="Flutter, Template, Firebase, Mobile App, iOS, Android, Development">
+    <meta property="og:title" content="Flutter Template">
+    <meta property="og:description" content="A production-ready Flutter template with Firebase integration">
+    <meta property="og:type" content="website">
+    <title>Flutter Template - Production-Ready Mobile App Starter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+            line-height: 1.6;
+            color: #1d1d1f;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .lang-switch button {
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .lang-switch button:hover {
+            transform: scale(1.05);
+        }
+        .container {
+            max-width: 600px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 48px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .app-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 27px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .tagline {
+            font-size: 18px;
+            color: #86868b;
+            margin-bottom: 32px;
+        }
+        .app-store-button {
+            display: inline-block;
+            margin-bottom: 32px;
+        }
+        .app-store-button img {
+            height: 50px;
+            transition: transform 0.2s;
+        }
+        .app-store-button:hover img {
+            transform: scale(1.05);
+        }
+        .features {
+            text-align: left;
+            margin-bottom: 32px;
+        }
+        .feature {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        .feature-icon {
+            font-size: 24px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .feature-text {
+            font-size: 15px;
+            color: #424245;
+        }
+        .links {
+            padding-top: 24px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .links a {
+            color: #007AFF;
+            text-decoration: none;
+            margin: 0 12px;
+            font-size: 14px;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .hidden {
+            display: none;
+        }
+        .pricing {
+            margin-bottom: 32px;
+        }
+        .pricing h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+        }
+        .pricing-cards {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+        .pricing-card {
+            flex: 1;
+            max-width: 200px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            position: relative;
+            background: #fff;
+        }
+        .pricing-card.popular {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+        }
+        .popular-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+        .plan-name {
+            font-size: 14px;
+            color: #86868b;
+            margin-bottom: 8px;
+        }
+        .plan-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+        .plan-price span {
+            font-size: 14px;
+            font-weight: 400;
+            color: #86868b;
+        }
+        .plan-price-usd {
+            font-size: 12px;
+            color: #86868b;
+            margin-top: 4px;
+        }
+        .plan-discount {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .footer {
+            margin-top: 24px;
+            font-size: 12px;
+            color: #86868b;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 32px 24px;
+            }
+            h1 {
+                font-size: 26px;
+            }
+            .tagline {
+                font-size: 16px;
+            }
+            .pricing-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            .pricing-card {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-switch">
+        <button onclick="toggleLanguage()" id="langBtn">English</button>
+    </div>
+
+    <div class="container">
+        <div class="app-icon">📱</div>
+
+        <!-- Japanese Content -->
+        <div id="ja-content">
+            <h1>Flutter Template</h1>
+            <p class="tagline">本番環境対応のFlutterテンプレート</p>
+
+            <a href="https://apps.apple.com/jp/app/id6742074009" class="app-store-button" target="_blank">
+                <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/ja-jp?size=250x83" alt="App Storeからダウンロード">
+            </a>
+
+            <div class="features">
+                <div class="feature">
+                    <span class="feature-icon">🔥</span>
+                    <span class="feature-text">Firebase完全統合（認証、Firestore、Analytics、Crashlytics）</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">🌍</span>
+                    <span class="feature-text">39言語対応の国際化（日本語、英語、スペイン語、フランス語など）</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">💰</span>
+                    <span class="feature-text">AdMob広告とアプリ内課金（RevenueCat）統合</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">🎨</span>
+                    <span class="feature-text">Apple Design準拠のUI/UX、ダークモード対応</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">🚀</span>
+                    <span class="feature-text">87個のClaude Codeコマンドで自動化リリース</span>
+                </div>
+            </div>
+
+            <div class="pricing">
+                <h2>プレミアムプラン</h2>
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <div class="plan-name">月額</div>
+                        <div class="plan-price">¥500<span>/月</span></div>
+                        <div class="plan-price-usd">$4.99/月</div>
+                    </div>
+                    <div class="pricing-card popular">
+                        <div class="popular-badge">お得</div>
+                        <div class="plan-name">年額</div>
+                        <div class="plan-price">¥4,000<span>/年</span></div>
+                        <div class="plan-price-usd">$34.99/年</div>
+                        <div class="plan-discount">33%お得</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- English Content -->
+        <div id="en-content" class="hidden">
+            <h1>Flutter Template</h1>
+            <p class="tagline">Production-Ready Flutter Starter Kit</p>
+
+            <a href="https://apps.apple.com/app/id6742074009" class="app-store-button" target="_blank">
+                <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store">
+            </a>
+
+            <div class="features">
+                <div class="feature">
+                    <span class="feature-icon">🔥</span>
+                    <span class="feature-text">Full Firebase integration (Auth, Firestore, Analytics, Crashlytics)</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">🌍</span>
+                    <span class="feature-text">10-language internationalization (Japanese, English, Spanish, French, etc.)</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">💰</span>
+                    <span class="feature-text">AdMob ads and in-app purchases (RevenueCat) integration</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">🎨</span>
+                    <span class="feature-text">Apple Design-compliant UI/UX with Dark Mode support</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">🚀</span>
+                    <span class="feature-text">87 Claude Code commands for automated release workflow</span>
+                </div>
+            </div>
+
+            <div class="pricing">
+                <h2>Premium Plans</h2>
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <div class="plan-name">Monthly</div>
+                        <div class="plan-price">$4.99<span>/mo</span></div>
+                        <div class="plan-price-usd">¥500/月</div>
+                    </div>
+                    <div class="pricing-card popular">
+                        <div class="popular-badge">Best Value</div>
+                        <div class="plan-name">Yearly</div>
+                        <div class="plan-price">$34.99<span>/yr</span></div>
+                        <div class="plan-price-usd">¥4,000/年</div>
+                        <div class="plan-discount">Save 42%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="links">
+            <a href="terms.html" id="terms-link">利用規約</a>
+            <a href="privacy.html" id="privacy-link">プライバシーポリシー</a>
+            <a href="contact.html" id="contact-link">お問い合わせ</a>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 crelve. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = localStorage.getItem('preferredLang') || 'ja';
+
+        function updateDisplay() {
+            document.getElementById('ja-content').classList.toggle('hidden', currentLang !== 'ja');
+            document.getElementById('en-content').classList.toggle('hidden', currentLang !== 'en');
+            document.getElementById('langBtn').textContent = currentLang === 'ja' ? 'English' : '日本語';
+            document.documentElement.lang = currentLang;
+
+            // Update link text
+            if (currentLang === 'ja') {
+                document.getElementById('terms-link').textContent = '利用規約';
+                document.getElementById('privacy-link').textContent = 'プライバシーポリシー';
+                document.getElementById('contact-link').textContent = 'お問い合わせ';
+            } else {
+                document.getElementById('terms-link').textContent = 'Terms of Use';
+                document.getElementById('privacy-link').textContent = 'Privacy Policy';
+                document.getElementById('contact-link').textContent = 'Contact';
+            }
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ja' ? 'en' : 'ja';
+            localStorage.setItem('preferredLang', currentLang);
+            updateDisplay();
+        }
+
+        updateDisplay();
+    </script>
+</body>
+</html>

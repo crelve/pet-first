@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - {{APP_NAME_EN}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      line-height: 1.8;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      padding: 48px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 600;
+      color: #1d1d1f;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 8px;
+    }
+    .lang-btn {
+      padding: 6px 12px;
+      border: 1px solid #d2d2d7;
+      border-radius: 6px;
+      background: #fff;
+      color: #424245;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover {
+      background: #f5f5f7;
+    }
+    .lang-btn.active {
+      background: #0066cc;
+      border-color: #0066cc;
+      color: #fff;
+    }
+    .lang-content { display: none; }
+    .lang-content.active { display: block; }
+    .subtitle {
+      color: #86868b;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 32px 0 16px;
+      color: #1d1d1f;
+    }
+    h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin: 24px 0 12px;
+      color: #1d1d1f;
+    }
+    p, li {
+      font-size: 15px;
+      color: #424245;
+      margin-bottom: 12px;
+    }
+    ul, ol {
+      padding-left: 24px;
+      margin-bottom: 16px;
+    }
+    li { margin-bottom: 8px; }
+    .nav {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #d2d2d7;
+    }
+    .nav a {
+      color: #0066cc;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .nav a:hover { text-decoration: underline; }
+    .nav a.active {
+      color: #1d1d1f;
+      font-weight: 600;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+    .data-table th, .data-table td {
+      border: 1px solid #d2d2d7;
+      padding: 12px;
+      text-align: left;
+      font-size: 14px;
+    }
+    .data-table th {
+      background: #f5f5f7;
+      font-weight: 600;
+    }
+    .contact {
+      margin-top: 32px;
+      padding: 20px;
+      background: #f5f5f7;
+      border-radius: 8px;
+    }
+    .contact h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .contact a { color: #0066cc; }
+    @media (max-width: 600px) {
+      body { padding: 20px 12px; }
+      .container { padding: 24px; }
+      .header { flex-direction: column; gap: 16px; }
+      h1 { font-size: 24px; }
+      h2 { font-size: 18px; }
+      .data-table { font-size: 12px; }
+      .data-table th, .data-table td { padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <a href="terms.html" id="nav-terms">Terms of Use</a>
+      <a href="privacy.html" class="active" id="nav-privacy">Privacy Policy</a>
+      <a href="contact.html" id="nav-contact">Contact</a>
+    </nav>
+
+    <div class="header">
+      <h1 id="page-title">Privacy Policy</h1>
+      <div class="lang-switch">
+        <button class="lang-btn active" id="btn-en" onclick="switchLang('en')">EN</button>
+        <button class="lang-btn" id="btn-ja" onclick="switchLang('ja')">日本語</button>
+      </div>
+    </div>
+
+    <!-- English Content -->
+    <div id="content-en" class="lang-content active">
+      <p class="subtitle">Last updated: {{EFFECTIVE_DATE_EN}}</p>
+
+      <p>{{DEVELOPER_NAME}} ("we", "us", or "our") operates the mobile application "{{APP_NAME_EN}}" (the "App"). This Privacy Policy explains how we collect, use, and protect your personal information when you use our App.</p>
+
+      <h2>1. Information We Collect</h2>
+      <p>We may collect the following types of information:</p>
+
+      <h3>1.1 Information You Provide</h3>
+      <ul>
+        <li>Account information (email address, username, etc.)</li>
+        <!-- AI_CUSTOMIZE: Add app-specific collected information (e.g., profile photos, date of birth, health data, etc.) -->
+      </ul>
+
+      <h3>1.2 Automatically Collected Information</h3>
+      <ul>
+        <li>Device information (device type, OS version, unique identifiers)</li>
+        <li>Usage data (app usage frequency, feature usage)</li>
+        <li>Crash logs and error reports</li>
+        <!-- AI_CUSTOMIZE: Add app-specific auto-collected information (e.g., location data, photo library access, etc.) -->
+      </ul>
+
+      <!-- AI_CUSTOMIZE_SECTION: If using location services
+      <h3>1.3 Location Information</h3>
+      <p>We may collect location information for the following purposes:</p>
+      <ul>
+        <li>[Specific purpose]</li>
+      </ul>
+      <p>You can disable location collection at any time through your device settings.</p>
+      -->
+
+      <!-- AI_CUSTOMIZE_SECTION: If using camera/photos
+      <h3>1.X Camera and Photo Library</h3>
+      <p>We may request access to your camera and photo library for the following purposes:</p>
+      <ul>
+        <li>[Specific purpose]</li>
+      </ul>
+      -->
+
+      <h2>2. How We Use Your Information</h2>
+      <p>We use the collected information for the following purposes:</p>
+      <ol>
+        <li>To provide and operate the App services</li>
+        <li>To provide customer support</li>
+        <li>To improve the App and develop new features</li>
+        <li>To analyze usage patterns</li>
+        <li>To prevent fraudulent use</li>
+        <!-- AI_CUSTOMIZE: Add app-specific purposes -->
+      </ol>
+
+      <h2>3. Third-Party Services</h2>
+      <p>We use the following third-party services. These services collect and use information according to their respective privacy policies.</p>
+
+      <table class="data-table">
+        <tr>
+          <th>Service</th>
+          <th>Provider</th>
+          <th>Purpose</th>
+          <th>Privacy Policy</th>
+        </tr>
+        <tr>
+          <td>Firebase Analytics</td>
+          <td>Google LLC</td>
+          <td>Usage analytics</td>
+          <td><a href="https://policies.google.com/privacy" target="_blank">Link</a></td>
+        </tr>
+        <tr>
+          <td>Firebase Crashlytics</td>
+          <td>Google LLC</td>
+          <td>Crash reporting</td>
+          <td><a href="https://policies.google.com/privacy" target="_blank">Link</a></td>
+        </tr>
+        <!-- AI_CUSTOMIZE: Add/remove rows based on services used -->
+        <!--
+        <tr>
+          <td>Google AdMob</td>
+          <td>Google LLC</td>
+          <td>Advertising</td>
+          <td><a href="https://policies.google.com/privacy" target="_blank">Link</a></td>
+        </tr>
+        <tr>
+          <td>RevenueCat</td>
+          <td>RevenueCat, Inc.</td>
+          <td>Subscription management</td>
+          <td><a href="https://www.revenuecat.com/privacy" target="_blank">Link</a></td>
+        </tr>
+        -->
+      </table>
+
+      <!-- AI_CUSTOMIZE_SECTION: If using ads
+      <h3>3.1 About Advertising</h3>
+      <p>We use Google AdMob to display advertisements. AdMob may use advertising identifiers and cookies to deliver personalized ads.</p>
+      <p>To opt out of personalized ads, enable "Limit Ad Tracking" or "Opt out of Ads Personalization" in your device settings.</p>
+      -->
+
+      <h2>4. Information Sharing</h2>
+      <p>We do not share your personal information with third parties except in the following cases:</p>
+      <ol>
+        <li>With your consent</li>
+        <li>When required by law</li>
+        <li>When necessary to protect life, body, or property</li>
+        <li>With service providers listed in "Third-Party Services" above</li>
+      </ol>
+
+      <h2>5. Data Retention</h2>
+      <p>We retain collected information for as long as necessary to provide our services or until you delete your account. After account deletion, personally identifiable information will be deleted within a reasonable period.</p>
+      <!-- AI_CUSTOMIZE: Add details about data storage location (domestic/overseas) and retention periods if applicable -->
+
+      <h2>6. Data Security</h2>
+      <p>We implement industry-standard security measures to protect collected information. However, no method of transmission over the Internet or electronic storage is 100% secure.</p>
+
+      <h2>7. Your Rights</h2>
+      <p>You have the following rights:</p>
+      <ul>
+        <li><strong>Access</strong>: Request access to your personal information we hold</li>
+        <li><strong>Correction</strong>: Request correction of inaccurate personal information</li>
+        <li><strong>Deletion</strong>: Request deletion of your personal information</li>
+        <li><strong>Data Portability</strong>: Request a copy of your personal information</li>
+      </ul>
+      <p>To exercise these rights, please contact us using the information below.</p>
+
+      <h2>8. Children's Privacy</h2>
+      <p>This App is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If we learn that we have collected personal information from a child under 13, we will delete it promptly.</p>
+      <!-- AI_CUSTOMIZE: Add COPPA compliance details if this is a children's app -->
+
+      <h2>9. Changes to This Policy</h2>
+      <p>We may update this Privacy Policy as needed. We will notify you of significant changes through the App or other means. The updated Privacy Policy will take effect when posted on this page.</p>
+
+      <h2>10. App Tracking Transparency</h2>
+      <p>On devices running iOS 14.5 or later, we will ask for permission before tracking your activity. You can still use the basic features of the App even if you do not allow tracking.</p>
+      <!-- AI_CUSTOMIZE: Add specific ATT usage purposes if applicable -->
+
+      <div class="contact">
+        <h3>Contact Us</h3>
+        <p>For questions about this Privacy Policy, please contact us:</p>
+        <p>{{DEVELOPER_NAME}}<br>
+        Email: <a href="mailto:{{DEVELOPER_EMAIL}}">{{DEVELOPER_EMAIL}}</a></p>
+      </div>
+    </div>
+
+    <!-- Japanese Content -->
+    <div id="content-ja" class="lang-content">
+      <p class="subtitle">最終更新日: {{EFFECTIVE_DATE_JA}}</p>
+
+      <p>{{DEVELOPER_NAME}}（以下「当社」）は、モバイルアプリケーション「{{APP_NAME_JA}}」（以下「本アプリ」）におけるユーザーの個人情報の取扱いについて、以下のとおりプライバシーポリシー（以下「本ポリシー」）を定めます。</p>
+
+      <h2>第1条 収集する情報</h2>
+      <p>本アプリでは、以下の情報を収集する場合があります。</p>
+
+      <h3>1.1 ユーザーが提供する情報</h3>
+      <ul>
+        <li>アカウント情報（メールアドレス、ユーザー名など）</li>
+        <!-- AI_CUSTOMIZE: アプリ固有の収集情報を追記（例：プロフィール写真、生年月日、健康データなど） -->
+      </ul>
+
+      <h3>1.2 自動的に収集される情報</h3>
+      <ul>
+        <li>デバイス情報（デバイスの種類、OSバージョン、固有識別子）</li>
+        <li>利用状況（アプリの使用頻度、機能の利用状況）</li>
+        <li>クラッシュログ・エラーレポート</li>
+        <!-- AI_CUSTOMIZE: アプリ固有の自動収集情報を追記（例：位置情報、写真ライブラリアクセスなど） -->
+      </ul>
+
+      <!-- AI_CUSTOMIZE_SECTION: 位置情報を使用する場合
+      <h3>1.3 位置情報</h3>
+      <p>本アプリでは、以下の目的で位置情報を収集する場合があります。</p>
+      <ul>
+        <li>【具体的な利用目的を記載】</li>
+      </ul>
+      <p>位置情報の収集は、端末の設定からいつでも無効にすることができます。</p>
+      -->
+
+      <!-- AI_CUSTOMIZE_SECTION: カメラ/写真を使用する場合
+      <h3>1.X カメラ・写真ライブラリ</h3>
+      <p>本アプリでは、以下の目的でカメラおよび写真ライブラリへのアクセスを求める場合があります。</p>
+      <ul>
+        <li>【具体的な利用目的を記載】</li>
+      </ul>
+      -->
+
+      <h2>第2条 情報の利用目的</h2>
+      <p>収集した情報は、以下の目的で利用します。</p>
+      <ol>
+        <li>本アプリのサービス提供・運営</li>
+        <li>ユーザーサポート対応</li>
+        <li>本アプリの改善・新機能開発</li>
+        <li>利用状況の分析</li>
+        <li>不正利用の防止</li>
+        <!-- AI_CUSTOMIZE: アプリ固有の利用目的を追記 -->
+      </ol>
+
+      <h2>第3条 第三者サービスの利用</h2>
+      <p>本アプリでは、以下の第三者サービスを利用しています。これらのサービスは、それぞれのプライバシーポリシーに従って情報を収集・利用します。</p>
+
+      <table class="data-table">
+        <tr>
+          <th>サービス名</th>
+          <th>提供元</th>
+          <th>目的</th>
+          <th>プライバシーポリシー</th>
+        </tr>
+        <tr>
+          <td>Firebase Analytics</td>
+          <td>Google LLC</td>
+          <td>利用状況分析</td>
+          <td><a href="https://policies.google.com/privacy" target="_blank">リンク</a></td>
+        </tr>
+        <tr>
+          <td>Firebase Crashlytics</td>
+          <td>Google LLC</td>
+          <td>クラッシュレポート</td>
+          <td><a href="https://policies.google.com/privacy" target="_blank">リンク</a></td>
+        </tr>
+        <!-- AI_CUSTOMIZE: 使用している第三者サービスに応じて行を追加/削除 -->
+        <!--
+        <tr>
+          <td>Google AdMob</td>
+          <td>Google LLC</td>
+          <td>広告配信</td>
+          <td><a href="https://policies.google.com/privacy" target="_blank">リンク</a></td>
+        </tr>
+        <tr>
+          <td>RevenueCat</td>
+          <td>RevenueCat, Inc.</td>
+          <td>サブスクリプション管理</td>
+          <td><a href="https://www.revenuecat.com/privacy" target="_blank">リンク</a></td>
+        </tr>
+        -->
+      </table>
+
+      <!-- AI_CUSTOMIZE_SECTION: 広告を使用する場合
+      <h3>3.1 広告について</h3>
+      <p>本アプリでは、Google AdMobを使用して広告を配信しています。AdMobは、パーソナライズド広告の配信のために、広告識別子やCookieを使用する場合があります。</p>
+      <p>パーソナライズド広告を無効にするには、端末の設定から「広告のトラッキングを制限」または「広告のパーソナライズをオプトアウト」を有効にしてください。</p>
+      -->
+
+      <h2>第4条 情報の共有</h2>
+      <p>当社は、以下の場合を除き、ユーザーの個人情報を第三者と共有することはありません。</p>
+      <ol>
+        <li>ユーザーの同意がある場合</li>
+        <li>法令に基づく場合</li>
+        <li>人の生命、身体または財産の保護のために必要がある場合</li>
+        <li>上記「第三者サービス」に記載のサービス提供者との共有</li>
+      </ol>
+
+      <h2>第5条 データの保管</h2>
+      <p>収集した情報は、サービス提供に必要な期間、またはユーザーがアカウントを削除するまで保管します。アカウント削除後、個人を特定できる情報は合理的な期間内に削除されます。</p>
+      <!-- AI_CUSTOMIZE: データ保管場所（日本国内/海外）や保管期間の詳細があれば追記 -->
+
+      <h2>第6条 データのセキュリティ</h2>
+      <p>当社は、収集した情報を保護するために、業界標準のセキュリティ対策を講じています。ただし、インターネット上の送信や電子的な保存方法は、100%安全ではありません。</p>
+
+      <h2>第7条 ユーザーの権利</h2>
+      <p>ユーザーは、以下の権利を有します。</p>
+      <ul>
+        <li><strong>アクセス権</strong>: 当社が保有するご自身の個人情報へのアクセスを請求できます</li>
+        <li><strong>訂正権</strong>: 不正確な個人情報の訂正を請求できます</li>
+        <li><strong>削除権</strong>: 個人情報の削除を請求できます</li>
+        <li><strong>データポータビリティ</strong>: 個人情報のコピーを請求できます</li>
+      </ul>
+      <p>これらの権利を行使する場合は、下記のお問い合わせ先までご連絡ください。</p>
+
+      <h2>第8条 お子様のプライバシー</h2>
+      <p>本アプリは、13歳未満のお子様を対象としていません。当社は、13歳未満のお子様から意図的に個人情報を収集することはありません。13歳未満のお子様の個人情報を収集したことが判明した場合、速やかに削除します。</p>
+      <!-- AI_CUSTOMIZE: 子供向けアプリの場合はCOPPA対応の詳細を追記 -->
+
+      <h2>第9条 本ポリシーの変更</h2>
+      <p>当社は、必要に応じて本ポリシーを変更することがあります。重要な変更がある場合は、本アプリ内での通知またはその他の方法でお知らせします。変更後の本ポリシーは、本ページに掲載した時点から効力を生じるものとします。</p>
+
+      <h2>第10条 App Tracking Transparency</h2>
+      <p>iOS 14.5以降のデバイスでは、アプリがユーザーのアクティビティを追跡する前に許可を求めます。追跡を許可しない場合でも、本アプリの基本機能はご利用いただけます。</p>
+      <!-- AI_CUSTOMIZE: ATTの具体的な使用目的があれば追記 -->
+
+      <div class="contact">
+        <h3>お問い合わせ</h3>
+        <p>本ポリシーに関するお問い合わせは、下記までご連絡ください。</p>
+        <p>{{DEVELOPER_NAME}}<br>
+        メール: <a href="mailto:{{DEVELOPER_EMAIL}}">{{DEVELOPER_EMAIL}}</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchLang(lang) {
+      // Toggle content visibility
+      document.getElementById('content-en').classList.toggle('active', lang === 'en');
+      document.getElementById('content-ja').classList.toggle('active', lang === 'ja');
+
+      // Update button states
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-ja').classList.toggle('active', lang === 'ja');
+
+      // Update page title
+      document.getElementById('page-title').textContent = lang === 'en' ? 'Privacy Policy' : 'プライバシーポリシー';
+      document.title = lang === 'en' ? 'Privacy Policy - {{APP_NAME_EN}}' : 'プライバシーポリシー - {{APP_NAME_JA}}';
+
+      // Update navigation
+      document.getElementById('nav-terms').textContent = lang === 'en' ? 'Terms of Use' : '利用規約';
+      document.getElementById('nav-privacy').textContent = lang === 'en' ? 'Privacy Policy' : 'プライバシーポリシー';
+      document.getElementById('nav-contact').textContent = lang === 'en' ? 'Contact' : 'お問い合わせ';
+
+      // Update HTML lang attribute
+      document.documentElement.lang = lang;
+
+      // Save preference
+      localStorage.setItem('preferredLang', lang);
+    }
+
+    // Restore saved language preference on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('preferredLang');
+      if (savedLang) {
+        switchLang(savedLang);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+/* Italian localization */
+"CFBundleDisplayName" = "Zone Meet – Orario Ideale";
+"NSUserTrackingUsageDescription" = "Il tracciamento viene utilizzato per visualizzare annunci personalizzati.";
+"NSMicrophoneUsageDescription" = "Questa app non utilizza funzioni audio.";
+"NSPhotoLibraryUsageDescription" = "L'accesso alla libreria foto è necessario per salvare foto.";
+"NSCameraUsageDescription" = "L'accesso alla fotocamera è necessario per scattare foto.";
+"NSUserNotificationsUsageDescription" = "Abbiamo bisogno dell'autorizzazione per le notifiche per inviarti aggiornamenti e avvisi importanti.";

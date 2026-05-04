@@ -1,0 +1,23 @@
+Test App'e hoş geldiniz!
+
+Hayatınızı kolaylaştırmak için tasarlanmış güçlü ve sezgisel bir uygulama.
+
+【Temel Özellikler】
+- Basit ve sezgisel kullanıcı arayüzü
+- Hızlı ve verimli performans
+- Güvenli veri depolama
+- Düzenli güncellemeler ve iyileştirmeler
+- Karanlık mod desteği
+
+【Şunlar İçin Mükemmel】
+- Güvenilir bir çözüm arayan herkes
+- Basitlik ve verimliliğe değer veren kullanıcılar
+- İş akışlarını kolaylaştırmak isteyen insanlar
+
+【Gizlilik ve Güvenlik】
+Verileriniz cihazınızda güvenli bir şekilde saklanır.
+
+Gizlilik Politikası: https://kikiki-flutter-template-prod.web.app/privacy.html
+Kullanım Koşulları: https://kikiki-flutter-template-prod.web.app/terms.html
+
+Şimdi indirin ve farkı yaşayın!

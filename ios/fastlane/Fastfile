@@ -1,0 +1,1222 @@
+require 'json'
+
+# Load app configuration from dart_env
+def load_dart_env(flavor = 'prod')
+  env_file = File.expand_path("../../dart_env/#{flavor}.env", __dir__)
+  config = {}
+
+  if File.exist?(env_file)
+    File.readlines(env_file).each do |line|
+      next if line.strip.empty? || line.start_with?('#')
+      key, value = line.strip.split('=', 2)
+      next unless key && value
+      config[key] = value.gsub(/^"|"$/, '')  # Remove quotes
+    end
+  else
+    UI.error "⚠️ Config file not found: #{env_file}"
+  end
+
+  config
+end
+
+# Load prod and dev configurations
+PROD_CONFIG = load_dart_env('prod')
+DEV_CONFIG = load_dart_env('dev')
+PROD_APP_ID = PROD_CONFIG['appId'] || 'kikiki.flutter.template'
+DEV_APP_ID = DEV_CONFIG['appId'] || 'kikiki.flutter.template'
+
+
+default_platform(:ios)
+
+platform :ios do
+  # Get app display name from Info.plist
+  def get_app_name
+    project_root = File.expand_path("../..", __dir__)
+    info_plist_path = File.join(project_root, "ios", "Runner", "Info.plist")
+
+    begin
+      app_name = sh("cd #{project_root} && /usr/libexec/PlistBuddy -c 'Print CFBundleDisplayName' #{info_plist_path}").strip
+      return app_name
+    rescue
+      # Fallback to CFBundleName if CFBundleDisplayName is not set
+      begin
+        app_name = sh("cd #{project_root} && /usr/libexec/PlistBuddy -c 'Print CFBundleName' #{info_plist_path}").strip
+        return app_name
+      rescue
+        return "App"
+      end
+    end
+  end
+
+  # Get app version from pubspec.yaml
+  def get_app_version
+    project_root = File.expand_path("../..", __dir__)
+    pubspec_path = File.join(project_root, "pubspec.yaml")
+
+    begin
+      pubspec_content = File.read(pubspec_path)
+      # Extract version like "2.0.1+6" and split to get "2.0.1"
+      version_line = pubspec_content.match(/^version:\s*(.+)$/)[1]
+      version = version_line.split('+').first.strip
+      UI.message "📦 App version from pubspec.yaml: #{version}"
+      return version
+    rescue => e
+      UI.error "⚠️ Could not read version from pubspec.yaml: #{e.message}"
+      return nil
+    end
+  end
+
+  # Slack notification helper
+  def send_slack(message:, success:)
+    return unless ENV["SLACK_WEBHOOK_URL"]
+
+    slack(
+      message: message,
+      success: success,
+      slack_url: ENV["SLACK_WEBHOOK_URL"],
+      default_payloads: []
+    )
+  end
+
+  # Handle errors and notify Slack
+  error do |lane, exception|
+    app_name = get_app_name
+    send_slack(
+      message: "❌ *#{app_name}* - #{lane} failed: #{exception.message}",
+      success: false
+    )
+  end
+
+  desc "Get App Store Connect API key"
+  lane :get_api_key do
+    app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: ENV["ASC_KEY_CONTENT"],
+      is_key_content_base64: false
+    )
+  end
+
+  desc "Upload metadata only (no binary, no screenshots)"
+  lane :upload_metadata do
+    api_key = get_api_key
+    begin
+      upload_to_app_store(
+        api_key: api_key,
+        app_identifier: PROD_APP_ID,
+        skip_binary_upload: true,
+        skip_screenshots: true,
+        force: true,
+        precheck_include_in_app_purchases: false
+      )
+    rescue => e
+      if e.message.to_s.include?("could not find an editable version")
+        UI.important("⚠️ No editable version — falling back to upload_metadata_live")
+        upload_metadata_live
+      else
+        raise
+      end
+    end
+  end
+
+  # READY_FOR_SALE のアプリに対し、editable な新バージョンを作らずに
+  # Live版で編集可能なフィールド (support_url / marketing_url / privacy_url /
+  # promotional_text) のみを更新するレーン。description / keywords / name /
+  # subtitle は edit_live では更新不可なので nil で送らない。
+  desc "Upload metadata to LIVE version (published apps; edit_live-safe fields only)"
+  lane :upload_metadata_live do
+    api_key = get_api_key
+
+    # fastlane bug workaround: edit_live: true のとき upload_metadata.rb:97 で
+    # app_store_version_localizations が未初期化のまま :217 で batch_enqueue(nil) が呼ばれる。
+    # nil を [] に変換して ArgumentError を回避する。
+    FastlaneCore::QueueWorker.prepend(Module.new do
+      def batch_enqueue(jobs)
+        super(jobs || [])
+      end
+    end)
+
+    upload_to_app_store(
+      api_key: api_key,
+      app_identifier: PROD_APP_ID,
+      edit_live: true,
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      skip_metadata: false,
+      force: true,
+      precheck_include_in_app_purchases: false,
+      name: {},
+      subtitle: {},
+      description: {},
+      keywords: {},
+      release_notes: {}
+    )
+  end
+
+  desc "Read code signing certificates and profiles from git repo"
+  lane :read_code_signing do
+    api_key = get_api_key
+
+    match(
+      type: "development",
+      readonly: true,
+      api_key: api_key,
+      git_url: ENV["GIT_URL"],
+      app_identifier: ENV["APP_IDENTIFIER"]
+    )
+  end
+
+  desc "Create new code signing certificates and profiles"
+  lane :create_new_code_signing do
+    api_key = get_api_key
+
+    match(
+      type: "appstore",
+      readonly: false,
+      api_key: api_key,
+      git_url: ENV["GIT_URL"],
+      app_identifier: ENV["APP_IDENTIFIER"]
+    )
+  end
+
+  desc "Regenerate provisioning profiles with updated capabilities"
+  lane :regenerate_profiles do
+    api_key = get_api_key
+
+    # Regenerate for prod
+    match(
+      type: "appstore",
+      readonly: false,
+      api_key: api_key,
+      app_identifier: PROD_APP_ID,
+      force: true
+    )
+
+    # # Regenerate for dev (dev App ID no longer needed)
+    # match(
+    #   type: "appstore",
+    #   readonly: false,
+    #   api_key: api_key,
+    #   app_identifier: DEV_APP_ID,
+    #   force: true
+    # )
+
+    UI.success "✅ Provisioning profiles regenerated successfully!"
+  end
+
+  desc "Sync certificates and profiles"
+  lane :sync_certificates do
+    api_key = get_api_key
+    match(type: "appstore", readonly: true, api_key: api_key)
+  end
+
+  desc "Build and upload to TestFlight (dev environment)"
+  lane :release_ios_dev do
+    api_key = get_api_key
+
+    # Sync certificates
+    match(
+      type: "appstore",
+      readonly: true,
+      api_key: api_key,
+      app_identifier: DEV_APP_ID
+    )
+
+    # Get the latest build number from TestFlight and increment
+    current_build = latest_testflight_build_number(
+      api_key: api_key,
+      app_identifier: DEV_APP_ID
+    )
+    new_build_number = current_build + 1
+
+    UI.message "Building dev with build number: #{new_build_number}"
+
+    # Build using Flutter CLI (without flavor, using bundle ID to differentiate)
+    # Get project root from Fastfile location (ios/fastlane/Fastfile -> ../..)
+    project_root = File.expand_path("../..", __dir__)
+    export_options_path = File.join(project_root, "ios", "ExportOptionsDev.plist")
+
+    UI.message "Project root: #{project_root}"
+    UI.message "Export options: #{export_options_path}"
+
+    Dir.chdir(project_root) do
+      sh("flutter", "build", "ipa",
+         "--release",
+         "--dart-define-from-file=dart_env/dev.env",
+         "--build-number=#{new_build_number}",
+         "--export-options-plist=#{export_options_path}")
+    end
+
+    # Upload the generated IPA
+    ipa_path = Dir.glob(File.join(project_root, "build/ios/ipa/*.ipa")).first
+
+    upload_to_testflight(
+      api_key: api_key,
+      app_identifier: DEV_APP_ID,
+      ipa: ipa_path,
+      skip_waiting_for_build_processing: true
+    )
+
+    app_name = get_app_name
+    send_slack(
+      message: "🚀 *#{app_name}* - TestFlight build #{new_build_number} (dev) uploaded!",
+      success: true
+    )
+  end
+
+  desc "Build and upload to TestFlight (prod environment)"
+  lane :release_ios_prod do
+    api_key = get_api_key
+
+    # Sync certificates
+    match(
+      type: "appstore",
+      readonly: true,
+      api_key: api_key,
+      app_identifier: PROD_APP_ID
+    )
+
+    # Get the latest build number from TestFlight and increment
+    current_build = latest_testflight_build_number(
+      api_key: api_key,
+      app_identifier: PROD_APP_ID
+    )
+    new_build_number = current_build + 1
+
+    UI.message "Building with build number: #{new_build_number}"
+
+    # Build using Flutter CLI
+    # Get project root from Fastfile location (ios/fastlane/Fastfile -> ../..)
+    project_root = File.expand_path("../..", __dir__)
+    export_options_path = File.join(project_root, "ios", "ExportOptions.plist")
+
+    UI.message "Project root: #{project_root}"
+    UI.message "Export options: #{export_options_path}"
+
+    Dir.chdir(project_root) do
+      sh("flutter", "build", "ipa",
+         "--release",
+         "--dart-define-from-file=dart_env/prod.env",
+         "--build-number=#{new_build_number}",
+         "--export-options-plist=#{export_options_path}")
+    end
+
+    # Upload the generated IPA
+    ipa_path = Dir.glob(File.join(project_root, "build/ios/ipa/*.ipa")).first
+
+    upload_to_testflight(
+      api_key: api_key,
+      app_identifier: PROD_APP_ID,
+      ipa: ipa_path,
+      skip_waiting_for_build_processing: true
+    )
+
+    app_name = get_app_name
+    send_slack(
+      message: "🚀 *#{app_name}* - TestFlight build #{new_build_number} (prod) uploaded!",
+      success: true
+    )
+
+    # TestFlightテスター確認・自動追加
+    company_dir = File.expand_path("~/kikiki/released/company")
+    tester_script = File.join(company_dir, "engineering/scripts/check-testflight-testers.py")
+    if File.exist?(tester_script)
+      UI.message "👥 TestFlightテスター確認中..."
+      sh("python3 #{tester_script} --bundle-id #{PROD_APP_ID} --setup --wait", log: false) rescue UI.important "⚠️ TestFlightテスター確認をスキップ（スクリプトエラー）"
+    end
+  end
+
+  desc "Build and upload to TestFlight (alias for release_ios_prod)"
+  lane :beta do
+    release_ios_prod
+  end
+
+  desc "Build and upload to App Store (prod environment)"
+  lane :release do
+    api_key = get_api_key
+
+    # Sync certificates
+    match(
+      type: "appstore",
+      readonly: true,
+      api_key: api_key,
+      app_identifier: PROD_APP_ID
+    )
+
+    # Get the latest build number from App Store/TestFlight and increment
+    current_build = latest_testflight_build_number(
+      api_key: api_key,
+      app_identifier: PROD_APP_ID
+    )
+    new_build_number = current_build + 1
+
+    UI.message "Building for App Store with build number: #{new_build_number}"
+
+    # Build using Flutter CLI
+    # Get project root from Fastfile location (ios/fastlane/Fastfile -> ../..)
+    project_root = File.expand_path("../..", __dir__)
+    export_options_path = File.join(project_root, "ios", "ExportOptions.plist")
+
+    UI.message "Project root: #{project_root}"
+    UI.message "Export options: #{export_options_path}"
+
+    Dir.chdir(project_root) do
+      sh("flutter", "build", "ipa",
+         "--release",
+         "--dart-define-from-file=dart_env/prod.env",
+         "--build-number=#{new_build_number}",
+         "--export-options-plist=#{export_options_path}")
+    end
+
+    # Upload the generated IPA
+    ipa_path = Dir.glob(File.join(project_root, "build/ios/ipa/*.ipa")).first
+
+    # Step 1: Upload binary only (creates App Store Version)
+    UI.message "📦 Step 1/2: Uploading binary to create App Store Version..."
+    app_version = get_app_version  # pubspec.yamlからバージョンを取得
+    upload_to_app_store(
+      api_key: api_key,
+      app_identifier: PROD_APP_ID,
+      ipa: ipa_path,
+      app_version: app_version,  # pubspec.yamlのバージョンを動的に使用
+      skip_metadata: true,
+      skip_screenshots: true,
+      precheck_include_in_app_purchases: false,
+      force: true
+    )
+
+    # Wait for App Store Connect to process the build
+    UI.message "⏳ Waiting 60 seconds for App Store Connect to create the version..."
+    sleep(180)
+
+      # Convert screenshot directory names from ARB to App Store Connect format
+      UI.message "🔄 Converting screenshot directory names to App Store Connect format..."
+      convert_script = File.join(project_root, "scripts/convert_screenshot_directories.sh")
+      if File.exist?(convert_script)
+        sh(convert_script)
+      else
+        UI.important "⚠️  Screenshot directory conversion script not found, continuing without conversion..."
+      end
+
+    # Step 2: Upload metadata and screenshots with error handling
+    # Note: For version 1.0.0, fastlane 2.231+ should handle missing review_attachment_file gracefully
+    begin
+      UI.message "📝 Step 2/2: Uploading metadata and screenshots..."
+      upload_to_app_store(
+        api_key: api_key,
+        app_identifier: PROD_APP_ID,
+        app_version: app_version,  # pubspec.yamlのバージョンを動的に使用
+        build_number: new_build_number.to_s,  # ビルドを明示指定
+        skip_binary_upload: true,
+        skip_screenshots: false,
+        screenshots_path: File.join(project_root, "screenshots"),
+        overwrite_screenshots: true,
+        precheck_include_in_app_purchases: false,
+        force: true,
+
+        # 審査提出を自動化
+        submit_for_review: true,              # 審査に自動提出
+        automatic_release: true,              # 承認後に自動リリース
+        submission_information: {
+          add_id_info_uses_idfa: false,       # 広告識別子を使用しない
+        }
+      )
+      UI.success "✅ Metadata and screenshots uploaded successfully!"
+    rescue => ex
+      UI.error "⚠️ Metadata upload failed: #{ex.message}"
+      UI.important "📦 Binary was uploaded successfully (Step 1 completed)"
+      UI.important "📝 You can update metadata and screenshots manually in App Store Connect:"
+      UI.important "   1. Go to https://appstoreconnect.apple.com"
+      UI.important "   2. Select your app #{PROD_APP_ID}"
+      UI.important "   3. Navigate to version 1.0.0"
+      UI.important "   4. Upload screenshots and update metadata manually"
+      UI.message ""
+      UI.message "💡 This error may occur if:"
+      UI.message "   • The version is already in review"
+      UI.message "   • App Store Connect needs more time to process the build"
+      UI.message "   • There are metadata validation issues"
+    end
+
+    # TestFlightテスター確認・自動追加（build をCEOグループに紐付け）
+    company_dir = File.expand_path("~/kikiki/released/company")
+    tester_script = File.join(company_dir, "engineering/scripts/check-testflight-testers.py")
+    if File.exist?(tester_script)
+      UI.message "👥 TestFlightテスター確認中..."
+      sh("python3 #{tester_script} --bundle-id #{PROD_APP_ID} --setup --wait", log: false) rescue UI.important "⚠️ TestFlightテスター確認をスキップ（スクリプトエラー）"
+    end
+
+    app_name = get_app_name
+    send_slack(
+      message: "🎉 *#{app_name}* - App Store build #{new_build_number} submitted!",
+      success: true
+    )
+  end
+
+  desc "Take screenshots automatically using Flutter integration test (Dart only)"
+  lane :take_screenshots do
+    # 完全にDartでスクリーンショットを撮影（Swift/XCUITest不要）
+    Dir.chdir("../..") do
+      UI.message "📸 Starting screenshot capture for 39 languages..."
+      UI.message "⏱️ This may take 30-60 minutes"
+
+      # 利用可能なiOSシミュレータを探す（優先順位順）
+      device_names = [
+        "iPhone 16 Pro Max",
+        "iPhone 15 Pro Max",
+        "iPhone 15 Pro",
+        "iPhone 14 Pro Max"
+      ]
+
+      device_id = nil
+      device_name = nil
+
+      device_names.each do |name|
+        result = sh(
+          "xcrun simctl list devices | grep '#{name}' | grep -v 'unavailable' | head -n 1 | awk -F '[()]' '{print $2}'",
+          log: false,
+          error_callback: ->(result) { nil }
+        ).strip
+
+        if !result.empty?
+          device_id = result
+          device_name = name
+          break
+        end
+      end
+
+      if device_id.nil? || device_id.empty?
+        UI.user_error! "❌ No suitable iOS simulator found. Please install iPhone 16 Pro Max or iPhone 15 Pro Max."
+      end
+
+      UI.message "📱 Using device: #{device_name} (#{device_id})"
+
+      # すべてのシミュレータをシャットダウン（競合を避けるため）
+      UI.message "🔄 Shutting down all simulators..."
+      sh("xcrun simctl shutdown all || true", log: false)
+      sleep(2)
+
+      # シミュレーターを起動
+      UI.message "🚀 Booting simulator..."
+      sh("xcrun simctl boot '#{device_id}' || true")
+      sleep(3)
+
+      # Flutter integration testを実行
+      UI.message "▶️ Running Flutter integration tests..."
+      UI.message "   (App will be built automatically)"
+      begin
+        sh("flutter test -d '#{device_id}' --timeout=60m integration_test/screenshot_test_all_locales.dart")
+      rescue => e
+        # flutter tool finalizer bug workaround: `flutter test` may exit non-zero
+        # after integration tests succeeded, because finalize tries to delete an
+        # already-removed temp dir (PathNotFoundException in flutter_test_listener).
+        # If screenshots were actually produced, treat as success.
+        produced = Dir.glob("screenshots/**/*.png").count
+        if produced > 0
+          UI.important "⚠️ flutter test exited non-zero but #{produced} screenshots were produced. Treating as success (flutter finalizer bug)."
+        else
+          raise e
+        end
+      end
+      UI.success "✅ Screenshot capture completed!"
+
+      # 生成されたスクリーンショットの数を表示
+      screenshot_count = Dir.glob("screenshots/**/*.png").count
+      UI.message "📊 Total screenshots: #{screenshot_count}"
+    end
+
+    send_slack(
+      message: "📸 Screenshots captured successfully using Flutter integration_test (Dart)!",
+      success: true
+    )
+  end
+
+  desc "Quick test: Take screenshots for 2 languages (Japanese & English)"
+  lane :take_screenshots_quick do
+    # テスト用: 日本語と英語のみ（約2-3分）
+    Dir.chdir("../..") do
+      UI.message "📸 Quick test: Capturing screenshots for 2 languages (ja, en-US)..."
+      UI.message "⏱️ This should take about 2-3 minutes"
+
+      # 利用可能なiOSシミュレータを探す（優先順位順）
+      device_names = [
+        "iPhone 16 Pro Max",
+        "iPhone 15 Pro Max",
+        "iPhone 15 Pro",
+        "iPhone 14 Pro Max"
+      ]
+
+      device_id = nil
+      device_name = nil
+
+      device_names.each do |name|
+        result = sh(
+          "xcrun simctl list devices | grep '#{name}' | grep -v 'unavailable' | head -n 1 | awk -F '[()]' '{print $2}'",
+          log: false,
+          error_callback: ->(result) { nil }
+        ).strip
+
+        if !result.empty?
+          device_id = result
+          device_name = name
+          break
+        end
+      end
+
+      if device_id.nil? || device_id.empty?
+        UI.user_error! "❌ No suitable iOS simulator found. Please install iPhone 16 Pro Max or iPhone 15 Pro Max."
+      end
+
+      UI.message "📱 Using device: #{device_name} (#{device_id})"
+
+      # すべてのシミュレータをシャットダウン（競合を避けるため）
+      UI.message "🔄 Shutting down all simulators..."
+      sh("xcrun simctl shutdown all || true", log: false)
+      sleep(2)
+
+      # シミュレーターを起動
+      UI.message "🚀 Booting simulator..."
+      sh("xcrun simctl boot '#{device_id}' || true")
+      sleep(3)
+
+      # Flutter integration testを実行（クイックテスト版）
+      UI.message "▶️ Running Flutter integration tests (2 languages)..."
+      UI.message "   (App will be built automatically)"
+      begin
+        sh("flutter test -d '#{device_id}' --timeout=30m integration_test/screenshot_test_quick.dart")
+      rescue => e
+        # flutter tool finalizer bug workaround: `flutter test` may exit non-zero
+        # after integration tests succeeded, because finalize tries to delete an
+        # already-removed temp dir (PathNotFoundException in flutter_test_listener).
+        # If screenshots were actually produced, treat as success.
+        produced = Dir.glob("screenshots/**/*.png").count
+        if produced > 0
+          UI.important "⚠️ flutter test exited non-zero but #{produced} screenshots were produced. Treating as success (flutter finalizer bug)."
+        else
+          raise e
+        end
+      end
+      UI.success "✅ Quick screenshot capture completed!"
+
+      # 生成されたスクリーンショットの数を表示
+      screenshot_count = Dir.glob("screenshots/**/*.png").count
+      UI.message "📊 Total screenshots: #{screenshot_count}"
+      UI.message ""
+      UI.message "📂 Screenshots saved to:"
+      UI.message "   • screenshots/ja/"
+      UI.message "   • screenshots/en-US/"
+    end
+  end
+
+  desc "Generate Framefiles from ARB translations (auto-localization)"
+  lane :generate_framefiles do
+    UI.message "🌍 Generating Framefiles from ARB translations for all 39 languages..."
+
+    sh("generate_framefiles_from_arb.rb")
+
+    UI.success "✅ Framefiles generated from ARB translations!"
+  end
+
+  desc "Customize screenshot files for your app (Phase 0)"
+  lane :customize_screenshots do
+    UI.message "🎨 Customizing screenshot files for your app..."
+
+    project_root = File.expand_path('../..', Dir.pwd)
+
+    # 1. 背景画像を生成（generate_background.shを使用）
+    UI.header "Step 1: Generating background image"
+    background_file = "ios/fastlane/background.png"
+
+    if !File.exist?(background_file)
+      UI.message "Generating background using generate_background.sh..."
+      Dir.chdir("../..")  do
+        sh("ios/fastlane/generate_background.sh")
+      end
+      UI.success "✅ Background image created at ios/fastlane/background.png"
+    else
+      UI.success "✅ Background image already exists at ios/fastlane/background.png"
+    end
+
+    # 2. integration_testファイルを確認/コピー
+    UI.header "Step 2: Checking integration_test file"
+    integration_test_file = "#{project_root}/integration_test/screenshot_test_all_locales.dart"
+
+    if !File.exist?(integration_test_file)
+      UI.message "Copying integration_test template..."
+      template = "/Users/tomohitokii/kikiki/new/flutter-template"
+      sh("mkdir", "-p", "#{project_root}/integration_test")
+      sh("cp", "#{template}/integration_test/screenshot_test_all_locales.dart", integration_test_file)
+      UI.success "✅ Template copied. Please customize it for your app screens."
+    else
+      UI.success "✅ integration_test file already exists"
+    end
+
+    # 3. fastlaneスクリプトを確認/コピー
+    UI.header "Step 3: Checking fastlane scripts"
+    frame_script = "frame_cjk_screenshots.rb"
+    generate_script = "generate_framefiles_from_arb.rb"
+
+    template = "/Users/tomohitokii/kikiki/new/flutter-template/ios/fastlane"
+
+    if !File.exist?(frame_script)
+      sh("cp", "#{template}/#{frame_script}", frame_script)
+      UI.success "✅ frame_cjk_screenshots.rb copied"
+    end
+
+    if !File.exist?(generate_script)
+      sh("cp", "#{template}/#{generate_script}", generate_script)
+      UI.success "✅ generate_framefiles_from_arb.rb copied"
+    end
+
+    # 4. 次のステップを案内
+    UI.header "🎉 Customization completed!"
+    UI.message ""
+    UI.message "Next steps:"
+    UI.message "1. Review ios/fastlane/background.png"
+    UI.message "2. Customize integration_test/screenshot_test_all_locales.dart for your app screens"
+    UI.message "3. Update lib/l10n/app_en.arb with screenshot text (Phase 1)"
+    UI.message "4. Run: flutter pub run flutter_foundation:translate_arb"
+    UI.message "5. Run: cd ios && bundle exec fastlane generate_framefiles"
+    UI.message "6. Run: cd ios && bundle exec fastlane take_screenshots"
+  end
+
+  desc "Apply device frames and marketing design to existing screenshots"
+  lane :apply_frames do
+    UI.message "🎨 Preparing App Store screenshots with frames and marketing design..."
+
+    # 1. 背景画像を各言語ディレクトリにコピー
+    UI.message "📋 Copying background to all language directories..."
+    Dir.chdir("../..") do
+      background_file = "ios/fastlane/background.png"
+      if File.exist?(background_file)
+        Dir.glob("screenshots/*/").each do |locale_dir|
+          FileUtils.cp(background_file, File.join(locale_dir, "background.png"))
+        end
+        UI.message "  ✅ Background copied to all language directories"
+      else
+        UI.error "  ❌ Background file not found: #{background_file}"
+      end
+    end
+
+    # 3. ARB翻訳から各言語のFramefileを生成
+    UI.message "🌍 Generating localized Framefiles from ARB..."
+    Dir.chdir("../..") do
+      sh("ios/fastlane/generate_framefiles_from_arb.rb")
+    end
+
+    # 3.5. スクリーンショットを App Store サイズにリサイズ (1320x2868 → 1290x2796)
+    UI.message "📐 Resizing screenshots to App Store size (1290x2796)..."
+    Dir.chdir("../..") do
+      # ImageMagickコマンドを自動検出
+      magick_cmd = nil
+      if system("command -v magick > /dev/null 2>&1")
+        magick_cmd = "magick"
+      elsif system("command -v convert > /dev/null 2>&1")
+        magick_cmd = "convert"
+      else
+        UI.error "  ⚠️  ImageMagick not found. Skipping resize (frameit may fail)."
+      end
+
+      if magick_cmd
+        resized_count = 0
+        Dir.glob("screenshots/**/*.png").each do |screenshot|
+          # background.pngはスキップ
+          next if screenshot.include?("background.png")
+          # すでにframedなファイルもスキップ
+          next if screenshot.include?("_framed.png")
+
+          # 画像サイズをチェック
+          size_check = `#{magick_cmd == "magick" ? "magick identify" : "identify"} -format "%wx%h" "#{screenshot}"`.strip
+
+          if size_check == "1320x2868"
+            # 1290x2796にリサイズ（強制リサイズで縦横比を無視）
+            if magick_cmd == "magick"
+              sh("magick \"#{screenshot}\" -resize 1290x2796\\! \"#{screenshot}\"", log: false)
+            else
+              sh("convert \"#{screenshot}\" -resize 1290x2796\\! \"#{screenshot}\"", log: false)
+            end
+            resized_count += 1
+          end
+        end
+        UI.message "  ✅ Resized #{resized_count} screenshots to App Store size"
+      end
+    end
+
+    # 4. 各言語ごとにデバイスフレーム + テキスト + 背景を適用
+    UI.message "🖼️ Applying frames to all language screenshots..."
+
+    # imagemagick-fullを優先的に使用（Freetypeサポートのため）
+    ENV['PATH'] = "/opt/homebrew/opt/imagemagick-full/bin:#{ENV['PATH']}"
+
+    locale_dirs = Dir.glob("../../screenshots/*/").select { |f| File.directory?(f) }
+    processed_count = 0
+
+    locale_dirs.each do |locale_dir|
+      locale = File.basename(locale_dir)
+      # 絶対パスに変換
+      abs_locale_dir = File.expand_path(locale_dir)
+      framefile = File.join(abs_locale_dir, "Framefile.json")
+
+      if File.exist?(framefile)
+        UI.message "  📱 Processing #{locale}..."
+        frameit(
+          white: false,
+          path: abs_locale_dir
+        )
+        processed_count += 1
+      else
+        UI.message "  ⚠️  No Framefile for #{locale}, skipping..."
+      end
+    end
+
+    UI.success "✅ App Store screenshots created successfully!"
+
+    # 統計情報を表示
+    screenshot_count = Dir.glob("../../screenshots/**/*.png").count
+    UI.message "📊 Total screenshots: #{screenshot_count}"
+    UI.message "📊 Languages processed: #{processed_count}"
+    UI.message "📝 Each screenshot includes:"
+    UI.message "   • Device frame (iPhone)"
+    UI.message "   • Gradient background"
+    UI.message "   • Localized title text"
+    UI.message "   • Localized description text"
+
+    app_name = get_app_name
+    send_slack(
+      message: "🎨 *#{app_name}* - App Store screenshots created: #{screenshot_count} across #{processed_count} languages!",
+      success: true
+    )
+  end
+
+  desc "Quick test: Apply frames to 2 languages only (Japanese & English)"
+  lane :apply_frames_quick do
+    UI.message "🎨 Quick test: Applying frames to 5 languages (ja, en-US, zh-Hans, ko, ar)..."
+
+    # 1. 背景画像をテスト言語ディレクトリにコピー
+    UI.message "📋 Copying background to test language directories..."
+    Dir.chdir("../..") do
+      background_file = "ios/fastlane/background.png"
+      # テスト：日本語、英語、中国語、韓国語、アラビア語
+      test_locales = ["ja", "en-US", "zh-Hans", "ko", "ar"]
+
+      if File.exist?(background_file)
+        test_locales.each do |locale|
+          locale_dir = "screenshots/#{locale}"
+          if Dir.exist?(locale_dir)
+            FileUtils.cp(background_file, File.join(locale_dir, "background.png"))
+            UI.message "  ✅ Background copied to #{locale}"
+          else
+            UI.important "  ⚠️  Directory not found: #{locale_dir}"
+          end
+        end
+      else
+        UI.error "  ❌ Background file not found: #{background_file}"
+      end
+    end
+
+    # 3. ARB翻訳から各言語のFramefileを生成
+    UI.message "🌍 Generating localized Framefiles from ARB..."
+    Dir.chdir("../..") do
+      sh("ios/fastlane/generate_framefiles_from_arb.rb")
+    end
+
+    # 3.5. スクリーンショットを App Store サイズにリサイズ (1320x2868 → 1290x2796)
+    UI.message "📐 Resizing screenshots to App Store size (1290x2796)..."
+    Dir.chdir("../..") do
+      # ImageMagickコマンドを自動検出
+      magick_cmd = nil
+      if system("command -v magick > /dev/null 2>&1")
+        magick_cmd = "magick"
+      elsif system("command -v convert > /dev/null 2>&1")
+        magick_cmd = "convert"
+      else
+        UI.error "  ⚠️  ImageMagick not found. Skipping resize (frameit may fail)."
+      end
+
+      if magick_cmd
+        resized_count = 0
+        # テスト：日本語、英語、中国語、韓国語、アラビア語
+        test_locales = ["ja", "en-US", "zh-Hans", "ko", "ar"]
+        test_locales.each do |locale|
+          Dir.glob("screenshots/#{locale}/*.png").each do |screenshot|
+            # background.pngはスキップ
+            next if screenshot.include?("background.png")
+            # すでにframedなファイルもスキップ
+            next if screenshot.include?("_framed.png")
+
+            # 画像サイズをチェック
+            size_check = `#{magick_cmd == "magick" ? "magick identify" : "identify"} -format "%wx%h" "#{screenshot}"`.strip
+
+            if size_check == "1320x2868"
+              # 1290x2796にリサイズ（強制リサイズで縦横比を無視）
+              if magick_cmd == "magick"
+                sh("magick \"#{screenshot}\" -resize 1290x2796\\! \"#{screenshot}\"", log: false)
+              else
+                sh("convert \"#{screenshot}\" -resize 1290x2796\\! \"#{screenshot}\"", log: false)
+              end
+              resized_count += 1
+            end
+          end
+        end
+        UI.message "  ✅ Resized #{resized_count} screenshots to App Store size"
+      end
+    end
+
+    # 4. テスト言語のみにデバイスフレーム + テキスト + 背景を適用
+    UI.message "🖼️ Applying frames to test language screenshots..."
+
+    # imagemagick-fullを優先的に使用（Freetypeサポートのため）
+    ENV['PATH'] = "/opt/homebrew/opt/imagemagick-full/bin:#{ENV['PATH']}"
+
+    # テスト：日本語、英語、中国語、韓国語、アラビア語
+    test_locales = ["ja", "en-US", "zh-Hans", "ko", "ar"]
+    processed_count = 0
+
+    # プロジェクトルートの絶対パスを取得
+    project_root = File.expand_path("../..", Dir.pwd)
+
+    test_locales.each do |locale|
+      # frameitには絶対パスを渡す
+      locale_dir = File.join(project_root, "screenshots", locale)
+      framefile = File.join(locale_dir, "Framefile.json")
+
+      if File.exist?(framefile)
+        UI.message "  📱 Processing #{locale}..."
+
+        # 日本語、中国語、韓国語はframeitの制限によりカスタム処理を使用
+        if ["ja", "zh-Hans", "zh-Hant", "ko"].include?(locale)
+          # 1. Framefileのテキストを一時的にダミーテキストにする（frameitにフレームと背景だけ追加させる）
+          original_framefile = JSON.parse(File.read(framefile))
+          temp_framefile = original_framefile.dup
+          temp_framefile['data'].each do |item|
+            item['title']['text'] = ' '  # スペース1文字（frameitがスキップしないように）
+            item['keyword']['text'] = ' '
+          end
+          File.write(framefile, JSON.pretty_generate(temp_framefile))
+
+          # 2. frameitを実行（フレームと背景のみ）
+          frameit(
+            white: false,
+            path: locale_dir
+          )
+
+          # 3. ARBから正しいFramefileを再生成（確実に日本語テキストを復元）
+          Dir.chdir("../..") do
+            sh("ios/fastlane/generate_framefiles_from_arb.rb")
+          end
+
+          # 4. 生成されたframed画像にCJKテキストを追加
+          script_path = File.join(project_root, "ios", "fastlane", "frame_cjk_screenshots.rb")
+          sh("ruby #{script_path} #{locale}")
+        else
+          frameit(
+            white: false,
+            path: locale_dir
+          )
+        end
+
+        processed_count += 1
+      else
+        UI.important "  ⚠️  No Framefile for #{locale}, skipping..."
+      end
+    end
+
+    Dir.chdir("../..") do
+
+      UI.success "✅ Quick test completed!"
+
+      # 統計情報を表示
+      screenshot_count = Dir.glob("screenshots/{ja,en-US,zh-Hans,ko,ar}/*.png").count
+      UI.message "📊 Total screenshots: #{screenshot_count}"
+      UI.message "📊 Languages processed: #{processed_count}"
+      UI.message "📝 Each screenshot includes:"
+      UI.message "   • Device frame (iPhone)"
+      UI.message "   • Gradient background"
+      UI.message "   • Localized title text"
+      UI.message "   • Localized description text"
+      UI.message ""
+      UI.message "📂 Check results:"
+      UI.message "   • open screenshots/ja (Japanese)"
+      UI.message "   • open screenshots/en-US (English)"
+      UI.message "   • open screenshots/zh-Hans (Chinese Simplified)"
+      UI.message "   • open screenshots/ko (Korean)"
+      UI.message "   • open screenshots/ar (Arabic)"
+    end
+  end
+
+  desc "Take screenshots and apply frames (for App Store)"
+  lane :screenshots_with_frames do
+    # スクリーンショットを自動で取得
+    snapshot
+
+    # デバイスフレームとテキストを追加
+    frameit(
+      white: false,
+      path: "./fastlane/screenshots"
+    )
+
+    app_name = get_app_name
+    send_slack(
+      message: "🖼️ *#{app_name}* - Screenshots with frames created successfully!",
+      success: true
+    )
+  end
+
+  desc "Upload screenshots to App Store Connect"
+  desc "Options:"
+  desc "  UPLOAD_LANGUAGES: Comma-separated list of languages to upload (e.g., 'ja,en-US,zh-Hans,ko')"
+  desc "  If not specified, uploads all languages in screenshots/ directory"
+  lane :upload_screenshots do |options|
+    api_key = get_api_key
+
+    # Get project root (ios/fastlane/Fastfile -> ../..)
+    project_root = File.expand_path("../..", __dir__)
+    screenshots_path = File.join(project_root, "screenshots")
+
+    # Convert screenshot directory names from ARB to App Store Connect format
+    UI.message "🔄 Converting screenshot directory names to App Store Connect format..."
+    convert_script = File.join(project_root, "scripts/convert_screenshot_directories.sh")
+    if File.exist?(convert_script)
+      sh(convert_script)
+    else
+      UI.important "⚠️  Screenshot directory conversion script not found, continuing without conversion..."
+    end
+
+    # 環境変数またはオプションから言語を取得
+    target_languages = options[:languages] || ENV['UPLOAD_LANGUAGES']
+    if target_languages
+      target_languages = target_languages.split(',').map(&:strip)
+      UI.important "🎯 Uploading only specific languages: #{target_languages.join(', ')}"
+    else
+      UI.message "📤 Uploading all available languages"
+    end
+
+    UI.message "📂 Debug info:"
+    UI.message "   Current dir (__dir__): #{__dir__}"
+    UI.message "   Current working dir (Dir.pwd): #{Dir.pwd}"
+    UI.message "   Project root: #{project_root}"
+    UI.message "   Screenshots path: #{screenshots_path}"
+    UI.message "   Screenshots path exists: #{Dir.exist?(screenshots_path)}"
+
+    if Dir.exist?(screenshots_path)
+      all_screenshots = Dir.glob("#{screenshots_path}/**/*.png").reject { |f| f.include?('background.png') || f.include?('_framed.png') }
+
+      # 言語フィルタリング
+      if target_languages
+        filtered_screenshots = all_screenshots.select do |file|
+          target_languages.any? { |lang| file.include?("/#{lang}/") }
+        end
+        UI.message "   Screenshots found: #{filtered_screenshots.count} files (#{all_screenshots.count} total, filtered to #{target_languages.join(', ')})"
+      else
+        UI.message "   Screenshots found: #{all_screenshots.count} files"
+      end
+    else
+      UI.error "   ⚠️ Screenshots directory not found!"
+    end
+
+    # 言語フィルタリングが指定されている場合、一時ディレクトリを作成
+    upload_path = screenshots_path
+    temp_dir = nil
+
+    if target_languages
+      UI.message "🔧 Creating temporary directory with filtered languages..."
+      temp_dir = File.join(project_root, "screenshots_temp")
+      FileUtils.rm_rf(temp_dir) if Dir.exist?(temp_dir)
+      FileUtils.mkdir_p(temp_dir)
+
+      target_languages.each do |lang|
+        src = File.join(screenshots_path, lang)
+        if Dir.exist?(src)
+          dest = File.join(temp_dir, lang)
+          FileUtils.mkdir_p(dest)
+
+          # スクリーンショットのみコピー（background.png と Framefile.json は除外）
+          Dir.glob(File.join(src, "*.png")).each do |file|
+            filename = File.basename(file)
+            # background.png は除外
+            next if filename == "background.png"
+
+            FileUtils.cp(file, File.join(dest, filename))
+          end
+
+          UI.message "   ✅ Copied #{lang} (excluding background.png)"
+        else
+          UI.important "   ⚠️ Language directory not found: #{lang}"
+        end
+      end
+
+      upload_path = temp_dir
+      UI.message "   Using temporary path: #{upload_path}"
+    end
+
+    # スクリーンショットをApp Store Connectにアップロード
+    # ローカルのスクリーンショットを正として、既存のものを上書き
+    UI.message "📤 Uploading screenshots to App Store Connect..."
+    UI.message "🔄 Existing screenshots will be overwritten with local versions (source of truth)"
+
+    begin
+      # deliver action内で削除の検証をスキップするためのハック
+      # ENV変数を設定して削除失敗を無視
+      ENV['DELIVER_SKIP_SCREENSHOT_DELETE_VERIFICATION'] = 'true'
+
+      upload_to_app_store(
+        api_key: api_key,
+        app_identifier: PROD_APP_ID,
+        skip_metadata: true,
+        skip_screenshots: false,
+        screenshots_path: upload_path,
+        overwrite_screenshots: true,  # ローカルのスクリーンショットを正として上書き
+        sync_screenshots: false,  # 同期しない
+        force: true,
+        skip_binary_upload: true,
+        precheck_include_in_app_purchases: false,  # API Key では In-app purchases チェック不可
+        ignore_language_directory_validation: true,  # 言語ディレクトリ検証をスキップ
+        screenshot_processing_timeout: 300  # スクリーンショット処理待機時間を5分に短縮（アップロード完了後の処理待ちを最小化）
+      )
+      UI.success "✅ Screenshots uploaded successfully!"
+    rescue => ex
+      if ex.message.include?("Failed verification of all screenshots deleted")
+        UI.error "❌ Cannot automatically delete existing screenshots"
+        UI.important ""
+        UI.important "This is expected when screenshots already exist. Trying alternative approach..."
+        UI.important ""
+
+        # 削除を諦めて、個別言語ごとにアップロードを試みる
+        UI.message "🔄 Attempting to upload screenshots without deleting existing ones..."
+
+        # 言語ごとに個別アップロード
+        all_languages = Dir.glob("#{screenshots_path}/*/").map { |d| File.basename(d) }
+
+        # 言語フィルタリング
+        if target_languages
+          languages = all_languages & target_languages
+          UI.message "Found #{languages.count} languages to upload: #{languages.join(', ')} (filtered from #{all_languages.count} total)"
+        else
+          languages = all_languages
+          UI.message "Found #{languages.count} languages: #{languages.join(', ')}"
+        end
+
+        uploaded_count = 0
+        app_version = get_app_version  # pubspec.yamlからバージョンを取得
+        languages.each do |locale|
+          begin
+            UI.message "📤 Uploading #{locale}..."
+            upload_to_app_store(
+              api_key: api_key,
+              app_identifier: PROD_APP_ID,
+              app_version: app_version,  # pubspec.yamlのバージョンを動的に使用
+              skip_metadata: true,
+              skip_screenshots: false,
+              screenshots_path: File.join(screenshots_path, locale),
+              overwrite_screenshots: true,
+              force: true,
+              skip_binary_upload: true,
+              precheck_include_in_app_purchases: false,
+              number_of_retries: 0
+            )
+            uploaded_count += 1
+            UI.success "  ✅ #{locale} uploaded"
+          rescue => lang_ex
+            UI.error "  ❌ Failed to upload #{locale}: #{lang_ex.message}"
+          end
+        end
+
+        if uploaded_count == 0
+          UI.error ""
+          UI.error "❌ Could not upload any screenshots automatically"
+          UI.important ""
+          UI.important "📝 Manual deletion required:"
+          UI.important "   1. Go to App Store Connect: https://appstoreconnect.apple.com"
+          UI.important "   2. Select your app #{PROD_APP_ID}"
+          UI.important "   3. Go to version 1.0.0"
+          UI.important "   4. Manually delete all screenshots for each language"
+          UI.important "   5. Save changes"
+          UI.important "   6. Re-run this command: bundle exec fastlane upload_screenshots"
+          UI.important ""
+          raise ex
+        else
+          UI.success "✅ Uploaded screenshots for #{uploaded_count} languages"
+        end
+      else
+        raise ex
+      end
+    ensure
+      # 一時ディレクトリをクリーンアップ
+      if temp_dir && Dir.exist?(temp_dir)
+        FileUtils.rm_rf(temp_dir)
+        UI.message "🗑️ Cleaned up temporary directory"
+      end
+    end
+
+    app_name = get_app_name
+    send_slack(
+      message: "📤 *#{app_name}* - Screenshots uploaded to App Store Connect!",
+      success: true
+    )
+  end
+
+desc "Prepare screenshots for App Store Connect upload"
+desc "Selects best available version: _ai.png > _framed.png > .png"
+lane :prepare_screenshots_for_upload do
+  UI.message "📦 Preparing screenshots for upload..."
+
+  project_root = File.expand_path('..', Dir.pwd)
+  screenshots_dir = File.join(project_root, "screenshots")
+  upload_dir = File.join(project_root, "screenshots_upload")
+
+  # アップロード用ディレクトリをクリーンアップ
+  FileUtils.rm_rf(upload_dir) if Dir.exist?(upload_dir)
+  FileUtils.mkdir_p(upload_dir)
+
+  # 各言語ディレクトリを処理
+  Dir.glob("#{screenshots_dir}/*/").each do |locale_dir|
+    locale = File.basename(locale_dir)
+    next if locale == "common"
+
+    upload_locale_dir = File.join(upload_dir, locale)
+    FileUtils.mkdir_p(upload_locale_dir)
+
+    # 各スクリーンショットファイルを処理
+    Dir.glob("#{locale_dir}/*.png").each do |file|
+      filename = File.basename(file)
+      next if filename == "background.png"
+      next if filename.include?("_framed.png") || filename.include?("_ai.png")
+
+      # ベースファイル名を取得（例: 01-home）
+      base_name = filename.gsub(".png", "")
+
+      # 優先順位に基づいてファイルを選択
+      # 1. AI生成版
+      # 2. フレーム版
+      # 3. オリジナル版
+      ai_file = File.join(locale_dir, "#{base_name}_ai.png")
+      framed_file = File.join(locale_dir, "#{base_name}_framed.png")
+      original_file = file
+
+      selected_file = nil
+      version = nil
+
+      if File.exist?(ai_file)
+        selected_file = ai_file
+        version = "AI"
+      elsif File.exist?(framed_file)
+        selected_file = framed_file
+        version = "framed"
+      else
+        selected_file = original_file
+        version = "original"
+      end
+
+      # アップロード用ディレクトリにコピー（元のファイル名で）
+      FileUtils.cp(selected_file, File.join(upload_locale_dir, filename))
+      UI.message "  ✅ #{locale}/#{filename} <- #{version}"
+    end
+  end
+
+  UI.success "✅ Screenshots prepared for upload!"
+  UI.message "📂 Upload directory: #{upload_dir}"
+  UI.message ""
+  UI.message "💡 Next step: Run upload to App Store Connect"
+
+  upload_dir
+end
+end

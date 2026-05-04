@@ -1,0 +1,7 @@
+/* Croatian localization */
+"CFBundleDisplayName" = "Zone Meet – Najbolji Termin";
+"NSUserTrackingUsageDescription" = "Praćenje se koristi za prikazivanje personaliziranih oglasa.";
+"NSMicrophoneUsageDescription" = "Ova aplikacija ne koristi audio značajke.";
+"NSPhotoLibraryUsageDescription" = "Pristup biblioteci fotografija potreban je za spremanje fotografija.";
+"NSCameraUsageDescription" = "Pristup kameri potreban je za snimanje fotografija.";
+"NSUserNotificationsUsageDescription" = "Potrebna nam je dozvola za obavijesti kako bismo vam mogli slati važna ažuriranja i upozorenja.";

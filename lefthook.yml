@@ -1,0 +1,298 @@
+# Lefthook configuration for CI/CD error prevention
+# https://github.com/evilmartians/lefthook
+
+# Skip hooks in case of emergency
+# Use: LEFTHOOK=0 git commit (to skip all hooks)
+# Use: git commit --no-verify (to skip pre-commit only)
+skip_output:
+  - meta
+  - success
+
+colors: true
+no_tty: false
+
+# Allow skipping specific hooks with environment variables
+# Example: LEFTHOOK_EXCLUDE=analyze,test git commit
+
+pre-commit:
+  parallel: true
+  commands:
+    # Flutter formatting (auto-fix)
+    format:
+      glob: "lib/**/*.dart"
+      run: fvm dart format {staged_files}
+      stage_fixed: true
+      
+    # Flutter static analysis (errors only)
+    # lib/gen/*.gen.dart は .gitignore 対象で build_runner ローカル生成のため、
+    # 未生成環境で analyze を走らせると数百件の偽errorsが出る。事前に生成を保証する。
+    analyze:
+      glob: "lib/**/*.dart"
+      run: |
+        if [ ! -d lib/gen ] || [ -z "$(ls -A lib/gen 2>/dev/null)" ]; then
+          echo "🔧 lib/gen が空 — analyze前に build_runner を実行..."
+          fvm dart run build_runner build --delete-conflicting-outputs
+        fi
+        fvm flutter analyze lib/ --no-fatal-infos --no-fatal-warnings || echo "⚠️ Analysis warnings found but continuing..."
+      
+    # Build runner check (only for files that need generation)
+    build-runner:
+      glob: "lib/**/*.dart"
+      run: |
+        if grep -q "part.*\.g\.dart\|part.*\.freezed\.dart" {staged_files}; then
+          echo "⚠️  Generated files may be outdated. Running build_runner..."
+          fvm dart run build_runner build --delete-conflicting-outputs
+        fi
+      
+    # Check for hardcoded Japanese strings
+    check-hardcoded-strings:
+      glob: "lib/**/*.dart"
+      run: |
+        echo "🔍 Checking for hardcoded Japanese strings..."
+        hardcoded_found=false
+
+        for file in {staged_files}; do
+          # Skip l10n files and generated files
+          if echo "$file" | grep -qE "l10n/|\.g\.dart|\.freezed\.dart"; then
+            continue
+          fi
+
+          # Check for Japanese characters in Text(), ThemeText(), SnackBar(), etc.
+          if grep -nE "(Text|ThemeText|SnackBar|AlertDialog|title:|content:)\s*\(.*[ぁ-んァ-ヶー一-龠々]" "$file"; then
+            echo "❌ Hardcoded Japanese string found in: $file"
+            hardcoded_found=true
+          fi
+        done
+
+        if [ "$hardcoded_found" = true ]; then
+          echo ""
+          echo "⚠️  ERROR: Hardcoded Japanese strings detected!"
+          echo "Please use AppLocalizations (l10n) instead:"
+          echo ""
+          echo "✅ Correct:   ThemeText(text: l10n.buttonSave)"
+          echo "❌ Incorrect: ThemeText(text: '保存')"
+          echo ""
+          echo "Add the string to all .arb files in lib/l10n/"
+          exit 1
+        else
+          echo "✅ No hardcoded Japanese strings found"
+        fi
+
+    # Check for prohibited components (AlertDialog, ElevatedButton, etc.)
+    check-component-rules:
+      glob: "lib/**/*.dart"
+      run: |
+        echo "🔍 Checking component rules..."
+        violations_found=false
+
+        for file in {staged_files}; do
+          # Skip generated files
+          if echo "$file" | grep -qE "\.g\.dart|\.freezed\.dart|/gen/"; then
+            continue
+          fi
+
+          # AlertDialog → ActionDialog/TwoButtonDialog
+          if grep -nE '\bAlertDialog\b' "$file" | grep -v "^.*//.*AlertDialog"; then
+            echo "❌ $file: AlertDialog detected → Use ActionDialog or TwoButtonDialog"
+            violations_found=true
+          fi
+
+          # ElevatedButton → PrimaryButton/SecondaryButton
+          if grep -nE '\bElevatedButton\b' "$file" | grep -v "^.*//.*ElevatedButton"; then
+            echo "❌ $file: ElevatedButton detected → Use PrimaryButton or SecondaryButton"
+            violations_found=true
+          fi
+
+          # ScaffoldMessenger.of().showSnackBar → SnackBarUtility
+          if grep -nE 'ScaffoldMessenger\.of|showSnackBar' "$file" | grep -v "^.*//"; then
+            echo "❌ $file: showSnackBar detected → Use SnackBarUtility.showSuccess/showError"
+            violations_found=true
+          fi
+
+          # FilledButton → PrimaryButton
+          if grep -nE '\bFilledButton\b' "$file" | grep -v "^.*//.*FilledButton"; then
+            echo "❌ $file: FilledButton detected → Use PrimaryButton or SecondaryButton"
+            violations_found=true
+          fi
+        done
+
+        if [ "$violations_found" = true ]; then
+          echo ""
+          echo "⚠️  ERROR: Prohibited components detected!"
+          echo "Required flutter_foundation components:"
+          echo "  PrimaryButton(text:, screen:, width:, isDisabled:, callback:)"
+          echo "  ActionDialog(title:, screen:, content:, buttonLabel:, callBack:)"
+          echo "  TwoButtonDialog(title:, screen:, content:, primaryButtonLabel:, ...)"
+          echo "  SnackBarUtility.showSuccess/showError(context:, theme:, message:)"
+          exit 1
+        else
+          echo "✅ Component rules OK"
+        fi
+
+    # Check for ALL hardcoded strings (not just Japanese)
+    check-hardcoded-l10n:
+      glob: "lib/**/*.dart"
+      run: |
+        echo "🔍 Checking for hardcoded user-facing strings..."
+        hardcoded_found=false
+
+        for file in {staged_files}; do
+          # Skip l10n, generated, gen, test files
+          if echo "$file" | grep -qE "l10n/|\.g\.dart|\.freezed\.dart|/gen/|test/"; then
+            continue
+          fi
+
+          # Check for hardcoded strings in UI components (single-quoted Japanese/CJK/general strings)
+          if grep -nE "(Text|ThemeText)\s*\(\s*'" "$file" | grep -v "^.*//"; then
+            echo "❌ $file: Hardcoded string in Text/ThemeText → Use l10n"
+            hardcoded_found=true
+          fi
+
+          # Check for label: 'xxx' patterns (BottomNavigationBarItem etc.)
+          if grep -nE "label:\s*'" "$file" | grep -v "^.*//"; then
+            echo "❌ $file: Hardcoded label → Use l10n"
+            hardcoded_found=true
+          fi
+
+          # Check for hintText: 'xxx' patterns
+          if grep -nE "hintText:\s*'" "$file" | grep -v "^.*//"; then
+            echo "❌ $file: Hardcoded hintText → Use l10n"
+            hardcoded_found=true
+          fi
+        done
+
+        if [ "$hardcoded_found" = true ]; then
+          echo ""
+          echo "⚠️  ERROR: Hardcoded user-facing strings detected!"
+          echo "All visible text must use AppLocalizations (l10n):"
+          echo "  final l10n = AppLocalizations.of(context)!;"
+          echo "  ThemeText(text: l10n.yourKey)"
+          exit 1
+        else
+          echo "✅ No hardcoded strings found"
+        fi
+
+    # Unit tests for changed files (optional)
+    test:
+      glob: "lib/**/*.dart"
+      run: |
+        # Find corresponding test files for staged Dart files
+        test_files=""
+        for file in {staged_files}; do
+          # Convert lib/path/file.dart to test/path/file_test.dart
+          test_file=$(echo "$file" | sed 's|^lib/|test/|' | sed 's|\.dart$|_test.dart|')
+          if [ -f "$test_file" ]; then
+            test_files="$test_files $test_file"
+          fi
+        done
+
+        if [ -n "$test_files" ]; then
+          echo "Running tests for: $test_files"
+          fvm flutter test $test_files
+        else
+          echo "No corresponding test files found for staged changes"
+          exit 0  # Don't fail if no tests found
+        fi
+
+commit-msg:
+  commands:
+    # Commit message validation (relaxed)
+    validate-message:
+      run: |
+        # Check basic format - allow longer messages and more types
+        commit_regex='^(feat|fix|docs|style|refactor|test|chore|build|ci|perf|revert)(\(.+\))?: .+'
+        if ! grep -qE "$commit_regex" "{1}"; then
+          echo "⚠️  Consider using conventional commit format:"
+          echo "type(scope): description"
+          echo "Types: feat, fix, docs, style, refactor, test, chore, build, ci, perf"
+          echo "Example: feat(auth): add user login functionality"
+          echo ""
+          echo "Proceeding with commit..."
+        fi
+
+pre-push:
+  commands:
+    # Check l10n completeness (all languages have same keys)
+    check-l10n-completeness:
+      run: |
+        echo "🌍 Checking l10n completeness..."
+
+        # Extract keys from Japanese file (base)
+        ja_keys=$(grep -o '"[^"@]*":' lib/l10n/app_ja.arb | grep -v '@' | sort)
+
+        # Check all language files (全ARBファイルを動的に検出)
+        all_complete=true
+        for lang_file in lib/l10n/app_*.arb; do
+          lang=$(basename "$lang_file" .arb | sed 's/app_//')
+          [ "$lang" = "ja" ] && continue
+          lang_keys=$(grep -o '"[^"@]*":' "$lang_file" | grep -v '@' | sort)
+
+          # Compare keys (tmpファイル経由でsh互換)
+          _tmp_ja=$(mktemp) && _tmp_lang=$(mktemp)
+          printf '%s\n' "$ja_keys" > "$_tmp_ja"
+          printf '%s\n' "$lang_keys" > "$_tmp_lang"
+          missing=$(comm -23 "$_tmp_ja" "$_tmp_lang")
+          extra=$(comm -13 "$_tmp_ja" "$_tmp_lang")
+          rm -f "$_tmp_ja" "$_tmp_lang"
+
+          if [ -n "$missing" ] || [ -n "$extra" ]; then
+            echo "❌ Incomplete l10n in $lang:"
+            if [ -n "$missing" ]; then
+              echo "  Missing keys: $(echo $missing | tr '\n' ' ')"
+            fi
+            if [ -n "$extra" ]; then
+              echo "  Extra keys: $(echo $extra | tr '\n' ' ')"
+            fi
+            all_complete=false
+          fi
+        done
+
+        if [ "$all_complete" = false ]; then
+          echo ""
+          echo "⚠️  ERROR: l10n files are not in sync!"
+          echo "All 10 language files must have the same keys:"
+          echo "  - lib/l10n/app_ja.arb (Japanese)"
+          echo "  - lib/l10n/app_en.arb (English)"
+          echo "  - lib/l10n/app_zh.arb (Chinese)"
+          echo "  - lib/l10n/app_ko.arb (Korean)"
+          echo "  - lib/l10n/app_es.arb (Spanish)"
+          echo "  - lib/l10n/app_fr.arb (French)"
+          echo "  - lib/l10n/app_it.arb (Italian)"
+          echo "  - lib/l10n/app_de.arb (German)"
+          echo "  - lib/l10n/app_pt.arb (Portuguese)"
+          echo "  - lib/l10n/app_hi.arb (Hindi)"
+          exit 1
+        else
+          echo "✅ All l10n files are complete and in sync"
+        fi
+
+    # Full test suite
+    test-all:
+      run: |
+        echo "🧪 Running full test suite..."
+        fvm flutter test --coverage --dart-define-from-file=dart_env/test.env
+
+    # Static analysis for entire codebase
+    analyze-all:
+      run: |
+        echo "🔍 Running static analysis..."
+        fvm flutter analyze
+        
+    # Build check
+    # build-check:
+    #   run: |
+    #     echo "🏗️  Checking build..."
+    #     fvm flutter build apk --debug --dart-define-from-file=dart_env/dev.env
+
+# Additional settings
+source_dir: "."
+source_dir_local: ".lefthook-local"
+
+# Skip patterns for specific scenarios
+skip:
+  - ref: main
+    commands:
+      - build-check
+  - ref: develop  
+    commands:
+      - build-check

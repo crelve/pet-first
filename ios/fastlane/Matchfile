@@ -1,0 +1,12 @@
+git_url("git@github.com:crelve/ios-certificates.git")
+
+storage_mode("git")
+
+type("development")
+
+app_identifier([
+  "kikiki.flutter.template",
+  "kikiki.flutter.template.dev"
+])
+
+team_id("TVU7FV638Y")

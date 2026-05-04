@@ -1,0 +1,11 @@
+Terima kasih telah mengunduh aplikasi kami!
+
+Versi ini meliputi:
+- Perbaikan bug dan peningkatan kinerja
+- Peningkatan pengalaman pengguna
+- Peningkatan stabilitas
+
+Jika Anda memiliki pertanyaan atau umpan balik, silakan hubungi kami melalui dukungan dalam aplikasi.
+
+Kebijakan Privasi: https://kikiki-flutter-template-prod.web.app/privacy.html
+Ketentuan Penggunaan: https://kikiki-flutter-template-prod.web.app/terms.html

@@ -1,0 +1,23 @@
+Velkommen til Test App!
+
+En kraftig og intuitiv app designet for å gjøre livet ditt enklere.
+
+【Viktige Funksjoner】
+- Enkelt og intuitivt brukergrensesnitt
+- Rask og effektiv ytelse
+- Sikker datalagring
+- Regelmessige oppdateringer og forbedringer
+- Støtte for mørk modus
+
+【Perfekt For】
+- Alle som leter etter en pålitelig løsning
+- Brukere som verdsetter enkelhet og effektivitet
+- Folk som ønsker å effektivisere arbeidsflyten sin
+
+【Personvern og Sikkerhet】
+Dine data lagres sikkert på din enhet.
+
+Personvernregler: https://kikiki-flutter-template-prod.web.app/privacy.html
+Bruksvilkår: https://kikiki-flutter-template-prod.web.app/terms.html
+
+Last ned nå og opplev forskjellen!

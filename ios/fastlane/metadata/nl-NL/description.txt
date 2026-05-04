@@ -1,0 +1,23 @@
+Welkom bij Test App!
+
+Een krachtige en intuïtieve app, ontworpen om uw leven gemakkelijker te maken.
+
+【Belangrijkste Kenmerken】
+- Eenvoudige en intuïtieve gebruikersinterface
+- Snelle en efficiënte prestaties
+- Veilige gegevensopslag
+- Regelmatige updates en verbeteringen
+- Ondersteuning voor donkere modus
+
+【Perfect Voor】
+- Iedereen die op zoek is naar een betrouwbare oplossing
+- Gebruikers die waarde hechten aan eenvoud en efficiëntie
+- Mensen die hun workflow willen stroomlijnen
+
+【Privacy en Veiligheid】
+Uw gegevens worden veilig opgeslagen op uw apparaat.
+
+Privacybeleid: https://kikiki-flutter-template-prod.web.app/privacy.html
+Gebruiksvoorwaarden: https://kikiki-flutter-template-prod.web.app/terms.html
+
+Download nu en ervaar het verschil!

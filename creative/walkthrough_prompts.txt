@@ -1,0 +1,44 @@
+=========================================
+Walkthrough Screen 1 (Welcome)
+=========================================
+
+A friendly welcome illustration for mobile app onboarding,
+smiling character with welcome gesture and Flutter logo elements,
+flat illustration style, soft pastel colors with Material Blue #2196F3 accents,
+centered composition on solid pure white #FFFFFF background,
+portrait format 9:16 aspect ratio, clean modern aesthetic.
+
+Avoid: text, letters, words, gradients, colored backgrounds,
+complex scenes, photo-realistic elements.
+
+Output: 375x667px PNG, mobile onboarding screen.
+
+=========================================
+Walkthrough Screen 2 (Features)
+=========================================
+
+A feature showcase illustration for mobile app onboarding,
+icons representing key app development features arranged neatly (code, design, deploy),
+flat illustration style, Material Blue #2196F3 color scheme,
+centered composition on solid pure white #FFFFFF background,
+portrait format 9:16 aspect ratio, clean informative design.
+
+Avoid: text, letters, words, gradients, colored backgrounds,
+cluttered layouts, photo-realistic elements.
+
+Output: 375x667px PNG, mobile onboarding screen.
+
+=========================================
+Walkthrough Screen 3 (Get Started)
+=========================================
+
+A call-to-action illustration for mobile app onboarding,
+pointing hand or arrow with checkmark in Material Blue #2196F3,
+flat illustration style, vibrant Material Blue #2196F3 accents,
+centered composition on solid pure white #FFFFFF background,
+portrait format 9:16 aspect ratio, encouraging energetic mood.
+
+Avoid: text, letters, words, gradients, colored backgrounds,
+complex elements, photo-realistic elements.
+
+Output: 375x667px PNG, mobile onboarding screen.

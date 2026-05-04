@@ -1,0 +1,7 @@
+/* Hebrew localization */
+"CFBundleDisplayName" = "Zone Meet – זמן פגישה מושלם";
+"NSUserTrackingUsageDescription" = "המעקב משמש להצגת פרסומות מותאמות אישית.";
+"NSMicrophoneUsageDescription" = "אפליקציה זו אינה משתמשת בתכונות אודיו.";
+"NSPhotoLibraryUsageDescription" = "נדרשת גישה לספריית התמונות לשמירת תמונות.";
+"NSCameraUsageDescription" = "נדרשת גישה למצלמה לצילום תמונות.";
+"NSUserNotificationsUsageDescription" = "אנו זקוקים להרשאת התראות כדי לשלוח לך עדכונים והתראות חשובים.";

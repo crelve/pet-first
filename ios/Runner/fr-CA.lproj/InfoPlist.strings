@@ -1,0 +1,7 @@
+/* French (Canada) localization */
+"CFBundleDisplayName" = "Zone Meet – Réunion Idéale";
+"NSUserTrackingUsageDescription" = "Le suivi est utilisé pour afficher des publicités personnalisées.";
+"NSMicrophoneUsageDescription" = "Cette application n'utilise pas de fonctions audio.";
+"NSPhotoLibraryUsageDescription" = "L'accès à la photothèque est nécessaire pour enregistrer des photos.";
+"NSCameraUsageDescription" = "L'accès à la caméra est nécessaire pour prendre des photos.";
+"NSUserNotificationsUsageDescription" = "Nous avons besoin de l'autorisation de notification pour vous envoyer des mises à jour et des alertes importantes.";

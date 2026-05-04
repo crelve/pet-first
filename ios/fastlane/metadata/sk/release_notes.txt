@@ -1,0 +1,11 @@
+Ďakujeme, že ste si stiahli našu aplikáciu!
+
+Táto verzia obsahuje:
+- Opravy chýb a vylepšenia výkonu
+- Vylepšená používateľská skúsenosť
+- Vylepšenia stability
+
+Ak máte akékoľvek otázky alebo spätnú väzbu, kontaktujte nás prostredníctvom podpory v aplikácii.
+
+Zásady ochrany osobných údajov: https://kikiki-flutter-template-prod.web.app/privacy.html
+Podmienky používania: https://kikiki-flutter-template-prod.web.app/terms.html

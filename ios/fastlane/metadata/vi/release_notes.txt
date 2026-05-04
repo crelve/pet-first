@@ -1,0 +1,11 @@
+Cảm ơn bạn đã tải xuống ứng dụng của chúng tôi!
+
+Phiên bản này bao gồm:
+- Sửa lỗi và cải thiện hiệu suất
+- Trải nghiệm người dùng được cải thiện
+- Cải thiện độ ổn định
+
+Nếu bạn có bất kỳ câu hỏi hoặc phản hồi nào, vui lòng liên hệ với chúng tôi thông qua hỗ trợ trong ứng dụng.
+
+Chính sách bảo mật: https://kikiki-flutter-template-prod.web.app/privacy.html
+Điều khoản sử dụng: https://kikiki-flutter-template-prod.web.app/terms.html

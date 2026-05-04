@@ -1,0 +1,23 @@
+Selamat datang ke Test App!
+
+Aplikasi yang berkuasa dan intuitif direka untuk memudahkan hidup anda.
+
+【Ciri-ciri Utama】
+- Antara muka pengguna yang ringkas dan intuitif
+- Prestasi yang pantas dan cekap
+- Storan data yang selamat
+- Kemas kini dan penambahbaikan berkala
+- Sokongan mod gelap
+
+【Sesuai Untuk】
+- Sesiapa sahaja yang mencari penyelesaian yang boleh dipercayai
+- Pengguna yang menghargai kesederhanaan dan kecekapan
+- Mereka yang ingin menyelaraskan aliran kerja mereka
+
+【Privasi & Keselamatan】
+Data anda disimpan dengan selamat pada peranti anda.
+
+Dasar Privasi: https://kikiki-flutter-template-prod.web.app/privacy.html
+Terma Penggunaan: https://kikiki-flutter-template-prod.web.app/terms.html
+
+Muat turun sekarang dan rasai perbezaannya!

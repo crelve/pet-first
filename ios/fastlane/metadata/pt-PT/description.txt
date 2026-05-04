@@ -1,0 +1,23 @@
+Bem-vindo ao Test App!
+
+Um aplicativo poderoso e intuitivo projetado para tornar sua vida mais fácil.
+
+【Recursos principais】
+- Interface de usuário simples e intuitiva
+- Desempenho rápido e eficiente
+- Armazenamento de dados seguro
+- Atualizações e melhorias regulares
+- Suporte ao modo escuro
+
+【Perfeito para】
+- Qualquer pessoa que procura uma solução confiável
+- Usuários que valorizam simplicidade e eficiência
+- Pessoas que desejam otimizar seu fluxo de trabalho
+
+【Privacidade e segurança】
+Seus dados são armazenados com segurança em seu dispositivo.
+
+Política de Privacidade: https://kikiki-flutter-template-prod.web.app/privacy.html
+Termos de Uso: https://kikiki-flutter-template-prod.web.app/terms.html
+
+Baixe agora e experimente a diferença!

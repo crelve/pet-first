@@ -1,0 +1,7 @@
+/* Slovak localization */
+"CFBundleDisplayName" = "Zone Meet – Najlepší Čas";
+"NSUserTrackingUsageDescription" = "Sledovanie sa používa na zobrazenie personalizovaných reklám.";
+"NSMicrophoneUsageDescription" = "Táto aplikácia nepoužíva zvukové funkcie.";
+"NSPhotoLibraryUsageDescription" = "Pre uloženie fotografií je potrebný prístup ku knižnici fotografií.";
+"NSCameraUsageDescription" = "Pre fotenie je potrebný prístup k fotoaparátu.";
+"NSUserNotificationsUsageDescription" = "Potrebujeme povolenie na oznámenia, aby sme vám mohli posielať dôležité aktualizácie a upozornenia.";

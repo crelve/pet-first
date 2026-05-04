@@ -1,0 +1,7 @@
+/* Vietnamese localization */
+"CFBundleDisplayName" = "Zone Meet – Giờ Họp Tốt Nhất";
+"NSUserTrackingUsageDescription" = "Theo dõi được sử dụng để hiển thị quảng cáo được cá nhân hóa.";
+"NSMicrophoneUsageDescription" = "Ứng dụng này không sử dụng tính năng âm thanh.";
+"NSPhotoLibraryUsageDescription" = "Cần quyền truy cập thư viện ảnh để lưu ảnh.";
+"NSCameraUsageDescription" = "Cần quyền truy cập máy ảnh để chụp ảnh.";
+"NSUserNotificationsUsageDescription" = "Chúng tôi cần quyền thông báo để gửi cho bạn các bản cập nhật và cảnh báo quan trọng.";

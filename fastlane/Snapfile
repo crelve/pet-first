@@ -1,0 +1,83 @@
+# Fastlane Snapshot Configuration
+
+# デバイス（iPhone 16 Pro Maxのみ - App Storeスクリーンショット用）
+devices([
+  "iPhone 16 Pro Max"
+])
+
+# 撮影する言語（App Store Connect対応39言語）
+languages([
+  "en-US",    # English (US)
+  "ja",       # Japanese
+  "zh-Hans",  # Chinese Simplified
+  "ko",       # Korean
+  "de-DE",    # German
+  "fr-FR",    # French
+  "pt-BR",    # Portuguese (Brazil)
+  "es-ES",    # Spanish
+  "hi",       # Hindi
+  "it",       # Italian
+  "ar-SA",    # Arabic
+  "ca",       # Catalan
+  "zh-Hant",  # Chinese Traditional
+  "hr",       # Croatian
+  "cs",       # Czech
+  "da",       # Danish
+  "nl-NL",    # Dutch
+  "en-AU",    # English (Australia)
+  "en-CA",    # English (Canada)
+  "en-GB",    # English (UK)
+  "fi",       # Finnish
+  "fr-CA",    # French Canadian
+  "el",       # Greek
+  "he",       # Hebrew
+  "hu",       # Hungarian
+  "id",       # Indonesian
+  "ms",       # Malay
+  "no",       # Norwegian
+  "pl",       # Polish
+  "pt-PT",    # Portuguese (Portugal)
+  "ro",       # Romanian
+  "ru",       # Russian
+  "sk",       # Slovak
+  "es-MX",    # Spanish (Mexico)
+  "sv",       # Swedish
+  "th",       # Thai
+  "tr",       # Turkish
+  "uk",       # Ukrainian
+  "vi"        # Vietnamese
+])
+
+# スクリーンショット保存先
+output_directory "./screenshots"
+
+# スキーム名
+scheme "Runner"
+
+# テストプラン（オプション）
+# testplan "ScreenshotTests"
+
+# クリア
+clear_previous_screenshots true
+
+# UIテストの再インストール
+reinstall_app true
+
+# アプリのビルド設定
+configuration "Release"
+
+# シミュレーターをリセット（推奨）
+erase_simulator true
+
+# ヘッドレスモード（バックグラウンドで実行）
+headless false
+
+# 同時実行数（1つずつ実行 - 確実性重視）
+concurrent_simulators false
+
+# スクリーンショット撮影時の待機時間（秒）
+# デフォルトは1秒だが、アプリの初期化に時間がかかる場合は増やす
+# launch_arguments(["-FASTLANE_SNAPSHOT YES"])
+
+# ダークモード対応（オプション）
+# dark_mode false

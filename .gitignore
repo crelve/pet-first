@@ -1,0 +1,114 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.firebase/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+ios/.symlinks/
+ios/build/
+
+# iOS specific
+ios/Pods/
+ios/Podfile.lock
+ios/Runner.xcworkspace/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/Flutter.podspec
+ios/Flutter/ephemeral/
+ios/Flutter/flutter_export_environment.sh
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+ios/fastlane/.env
+ios/fastlane/keys/
+
+# Security files
+*.key
+*.pem
+*.p12
+*.keystore
+*.jks
+*.mobileprovision
+AuthKey_*.p8
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.!*
+
+# IDE specific
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Screenshots - commit both raw and framed screenshots
+# Raw screenshots: screenshots/en/01-home.png
+# Framed screenshots: screenshots/en/01-home_framed.png
+
+
+# Custom
+**/**.freezed.dart
+**/**.g.dart
+**/**.gen.dart
+**/ios/Runner/Assets.xcassets/AppIcon.appIconset/**.png
+**/lib/l10n/app_localizations.dart
+**/lib/l10n/app_localizations_ja.dart
+**/lib/l10n/app_localizations_en.dart
+**/lib/l10n/app_localizations_fr.dart
+**/lib/l10n/app_localizations_it.dart
+**/lib/l10n/app_localizations_es.dart
+**/lib/l10n/app_localizations_ko.dart
+**/lib/l10n/app_localizations_zh.dart
+**/lib/l10n/app_localizations_de.dart
+**/lib/l10n/app_localizations_pt.dart
+**/lib/l10n/app_localizations_hi.dart
+**/coverage/
+
+# FVM Version Cache
+.fvm/
+
+# Serena
+.serena/cache

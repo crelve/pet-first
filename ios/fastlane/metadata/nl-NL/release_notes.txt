@@ -1,0 +1,11 @@
+Bedankt voor het downloaden van onze app!
+
+Deze versie bevat:
+- Bugfixes en prestatieverbeteringen
+- Verbeterde gebruikerservaring
+- Stabiliteitsverbeteringen
+
+Als u vragen of feedback heeft, neem dan contact met ons op via de in-app ondersteuning.
+
+Privacybeleid: https://kikiki-flutter-template-prod.web.app/privacy.html
+Gebruiksvoorwaarden: https://kikiki-flutter-template-prod.web.app/terms.html

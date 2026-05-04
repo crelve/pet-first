@@ -1,0 +1,11 @@
+Merci d'avoir téléchargé notre application !
+
+Cette version comprend :
+- Corrections de bugs et améliorations des performances
+- Expérience utilisateur améliorée
+- Améliorations de la stabilité
+
+Pour toute question ou commentaire, contactez-nous via le support intégré à l'application.
+
+Politique de confidentialité: https://kikiki-flutter-template-prod.web.app/privacy.html
+Conditions d'utilisation: https://kikiki-flutter-template-prod.web.app/terms.html

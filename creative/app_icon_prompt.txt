@@ -1,0 +1,22 @@
+A large geometric F letter symbol in white,
+flat vector graphic design, minimalist style,
+centered on solid uniform Material Blue #2196F3 background,
+PERFECT SQUARE canvas with SHARP 90-degree corners,
+symbol occupying 60-70% of canvas,
+high contrast, bold geometric shapes,
+fully opaque with no transparency.
+
+CRITICAL REQUIREMENTS:
+- Canvas shape: PERFECT SQUARE with SHARP CORNERS (not rounded)
+- All four corners must be SHARP 90-degree angles
+- Edge of image must be STRAIGHT lines meeting at RIGHT ANGLES
+- Background extends to the VERY EDGE with no rounded cutoff
+- FULLY OPAQUE: No transparency or alpha channel allowed
+- Color space: sRGB
+
+Avoid: rounded corners, curved edges, iOS style corners,
+pill shape, circular crop, any corner rounding whatsoever,
+text, letters, complex details,
+transparency, alpha channel, see-through elements.
+
+Output: 1024x1024px square PNG tile with PERFECTLY SHARP CORNERS, fully opaque.

@@ -1,0 +1,16 @@
+A clean minimal background for mobile app screenshots,
+solid uniform color Material Blue #2196F3,
+portrait format 1290x2796px,
+smooth even gradient from lighter blue #89C4F4 at top to Material Blue #2196F3 at bottom,
+subtle professional aesthetic.
+
+CRITICAL REQUIREMENTS:
+- Size: EXACTLY 1290x2796 pixels (portrait)
+- Smooth vertical gradient (top to bottom)
+- No text, no icons, no decorative elements
+- Professional and clean appearance
+
+Avoid: text, letters, icons, symbols, complex patterns,
+photo elements, illustrations, decorative graphics.
+
+Output: 1290x2796px PNG, clean gradient background only.

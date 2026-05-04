@@ -1,0 +1,7 @@
+/* Norwegian localization */
+"CFBundleDisplayName" = "Zone Meet – Beste Møtetid";
+"NSUserTrackingUsageDescription" = "Sporing brukes til å vise personlige annonser.";
+"NSMicrophoneUsageDescription" = "Denne appen bruker ikke lydfunksjoner.";
+"NSPhotoLibraryUsageDescription" = "Tilgang til fotobiblioteket er nødvendig for å lagre bilder.";
+"NSCameraUsageDescription" = "Tilgang til kameraet er nødvendig for å ta bilder.";
+"NSUserNotificationsUsageDescription" = "Vi trenger varslingstillatelse for å sende deg viktige oppdateringer og varsler.";

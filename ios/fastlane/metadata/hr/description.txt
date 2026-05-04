@@ -1,0 +1,23 @@
+Dobrodošli u Testnu Aplikaciju!
+
+Moćna i intuitivna aplikacija dizajnirana da vam olakša život.
+
+【Glavne Značajke】
+- Jednostavno i intuitivno korisničko sučelje
+- Brze i učinkovite performanse
+- Sigurno pohranjivanje podataka
+- Redovita ažuriranja i poboljšanja
+- Podrška za tamni način rada
+
+【Savršeno Za】
+- Sve koji traže pouzdano rješenje
+- Korisnike koji cijene jednostavnost i učinkovitost
+- Ljude koji žele optimizirati svoj radni tijek
+
+【Privatnost i Sigurnost】
+Vaši podaci se sigurno pohranjuju na vašem uređaju.
+
+Politika privatnosti: https://kikiki-flutter-template-prod.web.app/privacy.html
+Uvjeti korištenja: https://kikiki-flutter-template-prod.web.app/terms.html
+
+Preuzmite sada i iskusite razliku!

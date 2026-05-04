@@ -1,0 +1,11 @@
+Uygulamamızı indirdiğiniz için teşekkür ederiz!
+
+Bu sürüm şunları içerir:
+- Hata düzeltmeleri ve performans iyileştirmeleri
+- Geliştirilmiş kullanıcı deneyimi
+- Stabilite iyileştirmeleri
+
+Herhangi bir sorunuz veya geri bildiriminiz varsa, lütfen uygulama içi destek üzerinden bize ulaşın.
+
+Gizlilik Politikası: https://kikiki-flutter-template-prod.web.app/privacy.html
+Kullanım Koşulları: https://kikiki-flutter-template-prod.web.app/terms.html

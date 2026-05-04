@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{APP_NAME_EN}} - {{TAGLINE_EN}} | {{TAGLINE_JA}}</title>
+  <meta name="description" content="{{META_DESCRIPTION_EN}}">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>{{APP_EMOJI}}</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Segoe UI', sans-serif;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      line-height: 1.6;
+    }
+    .hero {
+      background: linear-gradient(135deg, {{PRIMARY_COLOR}} 0%, {{ACCENT_COLOR}} 100%);
+      color: #fff;
+      padding: 80px 20px;
+      text-align: center;
+    }
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .lang-switch {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 8px;
+    }
+    .lang-btn {
+      padding: 8px 16px;
+      border: 2px solid rgba(255,255,255,0.5);
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    .lang-btn.active {
+      background: #fff;
+      color: {{PRIMARY_COLOR}};
+      border-color: #fff;
+    }
+    .emoji {
+      font-size: 80px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .tagline {
+      font-size: 24px;
+      opacity: 0.95;
+      margin-bottom: 32px;
+      font-weight: 500;
+    }
+    .store-badges {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .store-badge {
+      height: 50px;
+      border-radius: 8px;
+    }
+    .section {
+      padding: 80px 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .section-title {
+      font-size: 36px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 48px;
+      color: #1d1d1f;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+    }
+    .feature {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .feature-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+    .feature h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1d1d1f;
+    }
+    .feature p {
+      color: #86868b;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .premium-section {
+      background: linear-gradient(135deg, {{PREMIUM_COLOR}} 0%, {{PREMIUM_COLOR_ALT}} 100%);
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .premium-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .premium-section h2 {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #1d1d1f;
+    }
+    .premium-section p {
+      font-size: 18px;
+      margin-bottom: 24px;
+      color: #1d1d1f;
+      opacity: 0.8;
+    }
+    .premium-price {
+      font-size: 36px;
+      font-weight: 700;
+      color: #1d1d1f;
+      margin-bottom: 8px;
+    }
+    .premium-note {
+      font-size: 14px;
+      color: #1d1d1f;
+      opacity: 0.7;
+    }
+    .premium-features {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    .premium-feature {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      color: #1d1d1f;
+    }
+    .premium-feature .check {
+      color: {{PRIMARY_COLOR}};
+      font-weight: bold;
+    }
+    .links-section {
+      background: #fff;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .links {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .links a {
+      color: #0066cc;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 12px 24px;
+      border: 1px solid #d2d2d7;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .links a:hover {
+      background: #f5f5f7;
+    }
+    .footer {
+      background: #1d1d1f;
+      color: #86868b;
+      padding: 40px 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+    .footer a {
+      color: #86868b;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      color: #fff;
+    }
+    .lang-content { display: none; }
+    .lang-content.active { display: block; }
+    .hero { position: relative; }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 36px; }
+      .tagline { font-size: 20px; }
+      .section-title { font-size: 28px; }
+      .lang-switch { position: static; justify-content: center; margin-bottom: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="switchLang('en')">EN</button>
+      <button class="lang-btn" onclick="switchLang('ja')">日本語</button>
+    </div>
+    <div class="hero-content">
+      <div class="emoji">{{APP_EMOJI}}</div>
+      <h1>{{APP_NAME_EN}}</h1>
+
+      <div id="tagline-en" class="lang-content active">
+        <p class="tagline">{{TAGLINE_EN}}<br>{{TAGLINE_SUB_EN}}</p>
+      </div>
+      <div id="tagline-ja" class="lang-content">
+        <p class="tagline">{{TAGLINE_JA}}<br>{{TAGLINE_SUB_JA}}</p>
+      </div>
+
+      <div class="store-badges">
+        <a href="{{IOS_APP_STORE_URL}}" target="_blank">
+          <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store" class="store-badge">
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section">
+    <div id="features-en" class="lang-content active">
+      <h2 class="section-title">Why {{APP_NAME_EN}}?</h2>
+      <div class="features">
+        {{FEATURES_EN}}
+      </div>
+    </div>
+
+    <div id="features-ja" class="lang-content">
+      <h2 class="section-title">{{APP_NAME_JA}}の特徴</h2>
+      <div class="features">
+        {{FEATURES_JA}}
+      </div>
+    </div>
+  </section>
+
+  <!-- Premium Section (Optional: remove if no premium) -->
+  <section class="premium-section">
+    <div class="premium-content">
+      <div id="premium-en" class="lang-content active">
+        <h2>{{PREMIUM_ICON}} Premium</h2>
+        <p>{{PREMIUM_DESCRIPTION_EN}}</p>
+        <div class="premium-price">{{PREMIUM_PRICE}}</div>
+        <div class="premium-note">{{PREMIUM_NOTE_EN}}</div>
+        <div class="premium-features">
+          {{PREMIUM_FEATURES_EN}}
+        </div>
+      </div>
+
+      <div id="premium-ja" class="lang-content">
+        <h2>{{PREMIUM_ICON}} プレミアム</h2>
+        <p>{{PREMIUM_DESCRIPTION_JA}}</p>
+        <div class="premium-price">{{PREMIUM_PRICE}}</div>
+        <div class="premium-note">{{PREMIUM_NOTE_JA}}</div>
+        <div class="premium-features">
+          {{PREMIUM_FEATURES_JA}}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Links Section -->
+  <section class="links-section">
+    <div class="links">
+      <a href="terms.html" id="link-terms">Terms of Use</a>
+      <a href="privacy.html" id="link-privacy">Privacy Policy</a>
+      <a href="contact.html" id="link-contact">Contact</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© {{CURRENT_YEAR}} <a href="mailto:w4cd2017@gmail.com">crelve</a>. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function switchLang(lang) {
+      // Toggle content visibility
+      document.querySelectorAll('.lang-content').forEach(el => {
+        el.classList.remove('active');
+      });
+
+      // Show selected language content
+      if (lang === 'en') {
+        document.getElementById('tagline-en').classList.add('active');
+        document.getElementById('features-en').classList.add('active');
+        document.getElementById('premium-en').classList.add('active');
+        document.getElementById('link-terms').textContent = 'Terms of Use';
+        document.getElementById('link-privacy').textContent = 'Privacy Policy';
+        document.getElementById('link-contact').textContent = 'Contact';
+        document.title = '{{APP_NAME_EN}} - {{TAGLINE_EN}}';
+      } else {
+        document.getElementById('tagline-ja').classList.add('active');
+        document.getElementById('features-ja').classList.add('active');
+        document.getElementById('premium-ja').classList.add('active');
+        document.getElementById('link-terms').textContent = '利用規約';
+        document.getElementById('link-privacy').textContent = 'プライバシーポリシー';
+        document.getElementById('link-contact').textContent = 'お問い合わせ';
+        document.title = '{{APP_NAME_JA}} - {{TAGLINE_JA}}';
+      }
+
+      // Update button states
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // Save preference
+      localStorage.setItem('preferredLang', lang);
+    }
+
+    // Restore saved language on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('preferredLang');
+      if (savedLang) {
+        const btn = document.querySelector(`.lang-btn:${savedLang === 'ja' ? 'last-child' : 'first-child'}`);
+        if (btn) btn.click();
+      }
+    });
+  </script>
+</body>
+</html>

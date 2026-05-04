@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found - {{APP_NAME_EN}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      text-align: center;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      padding: 48px;
+      max-width: 400px;
+    }
+    .emoji {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 64px;
+      font-weight: 600;
+      color: #86868b;
+      margin-bottom: 16px;
+    }
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1d1d1f;
+      margin-bottom: 8px;
+    }
+    p {
+      font-size: 17px;
+      color: #424245;
+      margin-bottom: 24px;
+    }
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .links a {
+      color: #0066cc;
+      text-decoration: none;
+      font-size: 15px;
+    }
+    .links a:hover { text-decoration: underline; }
+    .lang-switch {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .lang-btn {
+      padding: 6px 12px;
+      border: 1px solid #d2d2d7;
+      border-radius: 6px;
+      background: #fff;
+      color: #424245;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover {
+      background: #f5f5f7;
+    }
+    .lang-btn.active {
+      background: #0066cc;
+      border-color: #0066cc;
+      color: #fff;
+    }
+    .lang-content { display: none; }
+    .lang-content.active { display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="lang-switch">
+      <button class="lang-btn active" id="btn-en" onclick="switchLang('en')">EN</button>
+      <button class="lang-btn" id="btn-ja" onclick="switchLang('ja')">日本語</button>
+    </div>
+    <div class="emoji">{{APP_EMOJI}}</div>
+    <h1>404</h1>
+
+    <!-- English Content -->
+    <div id="content-en" class="lang-content active">
+      <h2>Page Not Found</h2>
+      <p>The page you're looking for doesn't exist.</p>
+      <div class="links">
+        <a href="terms.html">Terms of Use</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+
+    <!-- Japanese Content -->
+    <div id="content-ja" class="lang-content">
+      <h2>ページが見つかりません</h2>
+      <p>お探しのページは存在しません。</p>
+      <div class="links">
+        <a href="terms.html">利用規約</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchLang(lang) {
+      // Toggle content visibility
+      document.getElementById('content-en').classList.toggle('active', lang === 'en');
+      document.getElementById('content-ja').classList.toggle('active', lang === 'ja');
+
+      // Update button states
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-ja').classList.toggle('active', lang === 'ja');
+
+      // Update page title
+      document.title = lang === 'en' ? 'Page Not Found - {{APP_NAME_EN}}' : 'ページが見つかりません - {{APP_NAME_JA}}';
+
+      // Update HTML lang attribute
+      document.documentElement.lang = lang;
+
+      // Save preference
+      localStorage.setItem('preferredLang', lang);
+    }
+
+    // Restore saved language preference on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('preferredLang');
+      if (savedLang) {
+        switchLang(savedLang);
+      }
+    });
+  </script>
+</body>
+</html>

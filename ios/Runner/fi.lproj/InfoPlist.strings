@@ -1,0 +1,7 @@
+/* Finnish localization */
+"CFBundleDisplayName" = "Zone Meet – Paras Kokousaika";
+"NSUserTrackingUsageDescription" = "Seurantaa käytetään personoitujen mainosten näyttämiseen.";
+"NSMicrophoneUsageDescription" = "Tämä sovellus ei käytä äänitoimintoja.";
+"NSPhotoLibraryUsageDescription" = "Valokuvakirjaston käyttöoikeus vaaditaan kuvien tallentamiseen.";
+"NSCameraUsageDescription" = "Kameran käyttöoikeus vaaditaan kuvien ottamiseen.";
+"NSUserNotificationsUsageDescription" = "Tarvitsemme ilmoitusluvan lähettääksemme sinulle tärkeitä päivityksiä ja hälytyksiä.";

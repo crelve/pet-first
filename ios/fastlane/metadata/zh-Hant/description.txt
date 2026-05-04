@@ -1,0 +1,23 @@
+欢迎使用 Test App！
+
+一款功能强大且直观的应用，旨在让您的生活更轻松。
+
+【主要功能】
+- 简单直观的用户界面
+- 快速高效的性能
+- 安全的数据存储
+- 定期更新和改进
+- 深色模式支持
+
+【适合人群】
+- 寻找可靠解决方案的任何人
+- 重视简单和效率的用户
+- 希望简化工作流程的人
+
+【隐私与安全】
+您的数据安全存储在您的设备上。
+
+隐私政策: https://kikiki-flutter-template-prod.web.app/privacy.html
+使用条款: https://kikiki-flutter-template-prod.web.app/terms.html
+
+立即下载并体验不同！

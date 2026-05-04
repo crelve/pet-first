@@ -1,0 +1,7 @@
+/* German localization */
+"CFBundleDisplayName" = "Zone Meet – Beste Meetingzeit";
+"NSUserTrackingUsageDescription" = "Tracking wird verwendet, um personalisierte Werbung anzuzeigen.";
+"NSMicrophoneUsageDescription" = "Diese App verwendet keine Audiofunktionen.";
+"NSPhotoLibraryUsageDescription" = "Zugriff auf die Fotobibliothek ist erforderlich, um Fotos zu speichern.";
+"NSCameraUsageDescription" = "Kamerazugriff ist erforderlich, um Fotos aufzunehmen.";
+"NSUserNotificationsUsageDescription" = "Wir benötigen die Benachrichtigungsberechtigung, um Ihnen wichtige Updates und Warnungen zu senden.";

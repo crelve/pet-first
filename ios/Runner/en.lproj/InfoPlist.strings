@@ -1,0 +1,7 @@
+/* English localization */
+"CFBundleDisplayName" = "Zone Meet – Best Meeting Time";
+"NSUserTrackingUsageDescription" = "Tracking is used to display personalized advertisements.";
+"NSMicrophoneUsageDescription" = "This app does not use audio features.";
+"NSPhotoLibraryUsageDescription" = "Photo library access is required to save photos.";
+"NSCameraUsageDescription" = "Camera access is required to take photos.";
+"NSUserNotificationsUsageDescription" = "We need notification permissions to send you important updates and alerts.";

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- アプリのメインブランドカラー - プライマリーアクション、ボタン、ハイライトに使用 -->
+    <color name="main">#1976D2</color>
+
+    <!-- プライマリーカラー - メインの文字色、アイコン、重要な要素に使用 -->
+    <color name="primary">#212121</color>
+
+    <!-- プログレスバー、ローディングインジケーターに使用 -->
+    <color name="progress">#1976D2</color>
+
+    <!-- セカンダリ背景、カード背景、微妙な区切りに使用 -->
+    <color name="blueGrey">#F5F5F5</color>
+
+    <!-- アプリの基本背景色 -->
+    <color name="backGround">#F0F0F0</color>
+
+    <!-- ヘッダー、ナビゲーションバーの背景色 -->
+    <color name="headerBackground">#FAFAFA</color>
+
+    <!-- エラー状態、警告、削除アクションに使用 -->
+    <color name="error">#F44336</color>
+
+    <!-- アクセントカラー - セカンダリアクション、強調表示に使用 -->
+    <color name="accent">#FF6F00</color>
+
+    <!-- セカンダリテキスト、サブタイトル、無効状態に使用 -->
+    <color name="secondary">#757575</color>
+
+    <!-- 成功状態、完了アクション、ポジティブフィードバックに使用 -->
+    <color name="success">#4CAF50</color>
+
+    <!-- 基本色 -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- 透明度付きの色 -->
+    <color name="white70">#B3FFFFFF</color>
+    <color name="white38">#61FFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
+
+    <!-- Apple System Colors (アイコン用) -->
+    <color name="starGold">#FFCC00</color>
+    <color name="appleGreen">#34C759</color>
+    <color name="appleTeal">#00C7BE</color>
+    <color name="appleRed">#FF3B30</color>
+    <color name="applePurple">#5856D6</color>
+    <color name="appleBlue">#007AFF</color>
+    <color name="appleLilac">#AF52DE</color>
+    <color name="appleGray">#8E8E93</color>
+
+    <!-- サブスクリプション画面用カラー（プロダクトごとにカスタマイズ可能） -->
+    <color name="subscriptionPrimary">#1E88E5</color>
+    <color name="subscriptionAccent">#FF8A65</color>
+    <color name="subscriptionBadge">#4CAF50</color>
+    <color name="subscriptionGradientStart">#E3F2FD</color>
+    <color name="subscriptionGradientMiddle">#FAFAFA</color>
+    <color name="subscriptionGradientEnd">#E1F5FE</color>
+    <color name="subscriptionText">#263238</color>
+
+    <!-- 追加の色 -->
+    <color name="grey">#9E9E9E</color>
+    <color name="red">#F44336</color>
+    <color name="orange">#FF6F00</color>
+    <color name="green">#4CAF50</color>
+    <color name="blue">#1976D2</color>
+    <color name="purple">#9C27B0</color>
+    <color name="yellow">#FFEB3B</color>
+</resources>

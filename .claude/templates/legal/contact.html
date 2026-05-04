@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact - {{APP_NAME_EN}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      line-height: 1.8;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      padding: 48px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 600;
+      color: #1d1d1f;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 8px;
+    }
+    .lang-btn {
+      padding: 6px 12px;
+      border: 1px solid #d2d2d7;
+      border-radius: 6px;
+      background: #fff;
+      color: #424245;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover {
+      background: #f5f5f7;
+    }
+    .lang-btn.active {
+      background: #0066cc;
+      border-color: #0066cc;
+      color: #fff;
+    }
+    .lang-content { display: none; }
+    .lang-content.active { display: block; }
+    .subtitle {
+      color: #86868b;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+    .nav {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #d2d2d7;
+    }
+    .nav a {
+      color: #0066cc;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .nav a:hover { text-decoration: underline; }
+    .nav a.active {
+      color: #1d1d1f;
+      font-weight: 600;
+    }
+    .form-group {
+      margin-bottom: 24px;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1d1d1f;
+      margin-bottom: 8px;
+    }
+    .required {
+      color: #ff3b30;
+      margin-left: 4px;
+    }
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 16px;
+      border: 1px solid #d2d2d7;
+      border-radius: 8px;
+      background: #fff;
+      color: #1d1d1f;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #0066cc;
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+    }
+    input::placeholder,
+    textarea::placeholder {
+      color: #86868b;
+    }
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23424245' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 14px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      background: #0066cc;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .submit-btn:hover {
+      background: #0055b3;
+    }
+    .submit-btn:disabled {
+      background: #86868b;
+      cursor: not-allowed;
+    }
+    .success-message {
+      display: none;
+      padding: 20px;
+      background: #e8f5e9;
+      border-radius: 8px;
+      text-align: center;
+      color: #2e7d32;
+    }
+    .success-message.show {
+      display: block;
+    }
+    .error-message {
+      display: none;
+      padding: 16px;
+      background: #ffebee;
+      border-radius: 8px;
+      color: #c62828;
+      margin-bottom: 16px;
+    }
+    .error-message.show {
+      display: block;
+    }
+    .form-container.hidden {
+      display: none;
+    }
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+    .loading.show {
+      display: block;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #f5f5f7;
+      border-top: 3px solid #0066cc;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .hint {
+      font-size: 12px;
+      color: #86868b;
+      margin-top: 4px;
+    }
+    @media (max-width: 600px) {
+      body { padding: 20px 12px; }
+      .container { padding: 24px; }
+      .header { flex-direction: column; gap: 16px; }
+      h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <a href="terms.html" id="nav-terms">Terms of Use</a>
+      <a href="privacy.html" id="nav-privacy">Privacy Policy</a>
+      <a href="contact.html" class="active" id="nav-contact">Contact</a>
+    </nav>
+
+    <div class="header">
+      <h1 id="page-title">Contact Us</h1>
+      <div class="lang-switch">
+        <button class="lang-btn active" id="btn-en" onclick="switchLang('en')">EN</button>
+        <button class="lang-btn" id="btn-ja" onclick="switchLang('ja')">日本語</button>
+      </div>
+    </div>
+
+    <!-- English Content -->
+    <div id="content-en" class="lang-content active">
+      <p class="subtitle">We'd love to hear from you. Please fill out the form below.</p>
+
+      <div id="error-en" class="error-message"></div>
+
+      <div id="success-en" class="success-message">
+        <h3>Thank you for your message!</h3>
+        <p>We have received your inquiry and will respond within 2-3 business days.</p>
+      </div>
+
+      <div id="loading-en" class="loading">
+        <div class="spinner"></div>
+        <p>Sending...</p>
+      </div>
+
+      <form id="form-en" class="form-container" onsubmit="handleSubmit(event, 'en')">
+        <div class="form-group">
+          <label for="name-en">Name<span class="required">*</span></label>
+          <input type="text" id="name-en" name="name" required placeholder="Your name">
+        </div>
+
+        <div class="form-group">
+          <label for="email-en">Email<span class="required">*</span></label>
+          <input type="email" id="email-en" name="email" required placeholder="your@email.com">
+        </div>
+
+        <div class="form-group">
+          <label for="category-en">Category<span class="required">*</span></label>
+          <select id="category-en" name="category" required>
+            <option value="">Select a category</option>
+            <option value="bug">Bug Report</option>
+            <option value="feature">Feature Request</option>
+            <option value="account">Account Issue</option>
+            <option value="billing">Billing / Subscription</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="message-en">Message<span class="required">*</span></label>
+          <textarea id="message-en" name="message" required placeholder="Please describe your issue or question in detail..."></textarea>
+          <p class="hint">Minimum 10 characters</p>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-en">Send Message</button>
+      </form>
+    </div>
+
+    <!-- Japanese Content -->
+    <div id="content-ja" class="lang-content">
+      <p class="subtitle">お問い合わせは以下のフォームからお願いいたします。</p>
+
+      <div id="error-ja" class="error-message"></div>
+
+      <div id="success-ja" class="success-message">
+        <h3>お問い合わせありがとうございます！</h3>
+        <p>内容を確認の上、2〜3営業日以内にご返信いたします。</p>
+      </div>
+
+      <div id="loading-ja" class="loading">
+        <div class="spinner"></div>
+        <p>送信中...</p>
+      </div>
+
+      <form id="form-ja" class="form-container" onsubmit="handleSubmit(event, 'ja')">
+        <div class="form-group">
+          <label for="name-ja">お名前<span class="required">*</span></label>
+          <input type="text" id="name-ja" name="name" required placeholder="山田 太郎">
+        </div>
+
+        <div class="form-group">
+          <label for="email-ja">メールアドレス<span class="required">*</span></label>
+          <input type="email" id="email-ja" name="email" required placeholder="your@email.com">
+        </div>
+
+        <div class="form-group">
+          <label for="category-ja">お問い合わせ種別<span class="required">*</span></label>
+          <select id="category-ja" name="category" required>
+            <option value="">選択してください</option>
+            <option value="bug">不具合の報告</option>
+            <option value="feature">機能のご要望</option>
+            <option value="account">アカウントについて</option>
+            <option value="billing">課金・サブスクリプション</option>
+            <option value="other">その他</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="message-ja">お問い合わせ内容<span class="required">*</span></label>
+          <textarea id="message-ja" name="message" required placeholder="ご質問やご要望を詳しくお書きください..."></textarea>
+          <p class="hint">10文字以上でご入力ください</p>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-ja">送信する</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // {{FIREBASE_PROJECT_ID}} will be replaced during deployment
+    const FUNCTIONS_URL = 'https://asia-northeast1-{{FIREBASE_PROJECT_ID}}.cloudfunctions.net/submitContactForm';
+
+    function switchLang(lang) {
+      document.getElementById('content-en').classList.toggle('active', lang === 'en');
+      document.getElementById('content-ja').classList.toggle('active', lang === 'ja');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-ja').classList.toggle('active', lang === 'ja');
+      document.getElementById('page-title').textContent = lang === 'en' ? 'Contact Us' : 'お問い合わせ';
+      document.title = lang === 'en' ? 'Contact - {{APP_NAME_EN}}' : 'お問い合わせ - {{APP_NAME_JA}}';
+      document.getElementById('nav-terms').textContent = lang === 'en' ? 'Terms of Use' : '利用規約';
+      document.getElementById('nav-privacy').textContent = lang === 'en' ? 'Privacy Policy' : 'プライバシーポリシー';
+      document.getElementById('nav-contact').textContent = lang === 'en' ? 'Contact' : 'お問い合わせ';
+      document.documentElement.lang = lang;
+      localStorage.setItem('preferredLang', lang);
+    }
+
+    async function handleSubmit(event, lang) {
+      event.preventDefault();
+
+      const form = document.getElementById(`form-${lang}`);
+      const loading = document.getElementById(`loading-${lang}`);
+      const success = document.getElementById(`success-${lang}`);
+      const error = document.getElementById(`error-${lang}`);
+      const submitBtn = document.getElementById(`submit-${lang}`);
+
+      // Validate message length
+      const message = document.getElementById(`message-${lang}`).value;
+      if (message.length < 10) {
+        error.textContent = lang === 'en'
+          ? 'Message must be at least 10 characters.'
+          : 'メッセージは10文字以上で入力してください。';
+        error.classList.add('show');
+        return;
+      }
+
+      // Show loading
+      form.classList.add('hidden');
+      error.classList.remove('show');
+      loading.classList.add('show');
+      submitBtn.disabled = true;
+
+      const formData = {
+        name: document.getElementById(`name-${lang}`).value,
+        email: document.getElementById(`email-${lang}`).value,
+        category: document.getElementById(`category-${lang}`).value,
+        message: message,
+        language: lang,
+        appName: '{{APP_NAME_EN}}',
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
+      };
+
+      try {
+        const response = await fetch(FUNCTIONS_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        // Show success
+        loading.classList.remove('show');
+        success.classList.add('show');
+      } catch (err) {
+        // Show error
+        loading.classList.remove('show');
+        form.classList.remove('hidden');
+        submitBtn.disabled = false;
+        error.textContent = lang === 'en'
+          ? 'Failed to send message. Please try again later.'
+          : '送信に失敗しました。しばらく経ってからもう一度お試しください。';
+        error.classList.add('show');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('preferredLang');
+      if (savedLang) {
+        switchLang(savedLang);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+/* Turkish localization */
+"CFBundleDisplayName" = "Zone Meet – En İyi Toplantı";
+"NSUserTrackingUsageDescription" = "İzleme, kişiselleştirilmiş reklamlar göstermek için kullanılır.";
+"NSMicrophoneUsageDescription" = "Bu uygulama ses özelliklerini kullanmaz.";
+"NSPhotoLibraryUsageDescription" = "Fotoğrafları kaydetmek için fotoğraf kitaplığı erişimi gereklidir.";
+"NSCameraUsageDescription" = "Fotoğraf çekmek için kamera erişimi gereklidir.";
+"NSUserNotificationsUsageDescription" = "Size önemli güncellemeler ve uyarılar göndermek için bildirim izni gerekiyor.";

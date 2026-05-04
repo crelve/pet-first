@@ -1,0 +1,23 @@
+Vítejte v Test App!
+
+Výkonná a intuitivní aplikace navržená tak, aby vám usnadnila život.
+
+【Klíčové vlastnosti】
+- Jednoduché a intuitivní uživatelské rozhraní
+- Rychlý a efektivní výkon
+- Bezpečné ukládání dat
+- Pravidelné aktualizace a vylepšení
+- Podpora tmavého režimu
+
+【Ideální pro】
+- Každého, kdo hledá spolehlivé řešení
+- Uživatelé, kteří si cení jednoduchosti a efektivity
+- Lidi, kteří chtějí zefektivnit svůj pracovní postup
+
+【Soukromí a bezpečnost】
+Vaše data jsou bezpečně uložena na vašem zařízení.
+
+Zásady ochrany osobních údajů: https://kikiki-flutter-template-prod.web.app/privacy.html
+Podmínky použití: https://kikiki-flutter-template-prod.web.app/terms.html
+
+Stáhněte si nyní a zažijte ten rozdíl!

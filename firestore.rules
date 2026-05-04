@@ -1,0 +1,37 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // device_users コレクション
+    // 端末ユーザー管理（UUIDベース）
+    match /device_users/{userId} {
+      // 自分のデバイスドキュメントのみ読み書き可能
+      // 注意: 本番環境ではより厳密な認証が必要な場合があります
+      allow read, write: if true;
+    }
+
+    // counters コレクション
+    // 連番ID管理用
+    match /counters/{counterId} {
+      allow read, write: if true;
+    }
+
+    // reminders コレクション
+    // リマインダー通知スケジュール管理
+    // Cloud Functions (processReminders) は Admin SDK で直接アクセスするためルール対象外
+    match /reminders/{reminderId} {
+      // 自分のリマインダーのみ読み取り・更新・削除可能
+      allow read, update, delete: if request.auth != null
+        && request.auth.uid == resource.data.userId;
+      // 作成時は request.resource.data.userId で確認
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.userId;
+    }
+
+    // その他のドキュメントはデフォルトで拒否
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

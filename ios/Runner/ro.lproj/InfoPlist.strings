@@ -1,0 +1,7 @@
+/* Romanian localization */
+"CFBundleDisplayName" = "Zone Meet – Cel Mai Bun Timp";
+"NSUserTrackingUsageDescription" = "Urmărirea este folosită pentru a afișa reclame personalizate.";
+"NSMicrophoneUsageDescription" = "Această aplicație nu utilizează funcții audio.";
+"NSPhotoLibraryUsageDescription" = "Accesul la biblioteca de fotografii este necesar pentru salvarea fotografiilor.";
+"NSCameraUsageDescription" = "Accesul la cameră este necesar pentru a face fotografii.";
+"NSUserNotificationsUsageDescription" = "Avem nevoie de permisiunea pentru notificări pentru a vă trimite actualizări și alerte importante.";

@@ -1,0 +1,11 @@
+Tack för att du laddade ner vår app!
+
+Denna version innehåller:
+- Buggfixar och prestandaförbättringar
+- Förbättrad användarupplevelse
+- Stabilitetsförbättringar
+
+Om du har några frågor eller feedback, kontakta oss via supporten i appen.
+
+Integritetspolicy: https://kikiki-flutter-template-prod.web.app/privacy.html
+Användarvillkor: https://kikiki-flutter-template-prod.web.app/terms.html

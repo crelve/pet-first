@@ -1,0 +1,11 @@
+Hvala vam što ste preuzeli našu aplikaciju!
+
+Ova verzija uključuje:
+- Ispravci grešaka i poboljšanja performansi
+- Poboljšano korisničko iskustvo
+- Poboljšanja stabilnosti
+
+Ako imate pitanja ili povratnih informacija, kontaktirajte nas putem podrške u aplikaciji.
+
+Pravila privatnosti: https://kikiki-flutter-template-prod.web.app/privacy.html
+Uvjeti korištenja: https://kikiki-flutter-template-prod.web.app/terms.html

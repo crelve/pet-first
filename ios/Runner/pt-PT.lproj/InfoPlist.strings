@@ -1,0 +1,7 @@
+/* Portuguese (Portugal) localization */
+"CFBundleDisplayName" = "Zone Meet – Melhor Horário";
+"NSUserTrackingUsageDescription" = "O rastreamento é usado para exibir anúncios personalizados.";
+"NSMicrophoneUsageDescription" = "Esta aplicação não usa recursos de áudio.";
+"NSPhotoLibraryUsageDescription" = "O acesso à biblioteca de fotos é necessário para guardar fotos.";
+"NSCameraUsageDescription" = "O acesso à câmara é necessário para tirar fotos.";
+"NSUserNotificationsUsageDescription" = "Precisamos de permissão de notificação para enviar atualizações e alertas importantes.";

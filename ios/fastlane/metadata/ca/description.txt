@@ -1,0 +1,23 @@
+Benvingut a l'App de Prova!
+
+Una aplicació potent i intuïtiva dissenyada per a fer-te la vida més fàcil.
+
+【Característiques principals】
+- Interfície d'usuari senzilla i intuïtiva
+- Rendiment ràpid i eficient
+- Emmagatzematge de dades segur
+- Actualitzacions i millores regulars
+- Compatible amb el mode fosc
+
+【Perfecte per a】
+- Qualsevol persona que busqui una solució fiable
+- Usuaris que valoren la simplicitat i l'eficiència
+- Gent que vol agilitzar el seu flux de treball
+
+【Privacitat i seguretat】
+Les teves dades s'emmagatzemen de manera segura al teu dispositiu.
+
+Política de privacitat: https://kikiki-flutter-template-prod.web.app/privacy.html
+Condicions d'ús: https://kikiki-flutter-template-prod.web.app/terms.html
+
+Descarrega ara i experimenta la diferència!

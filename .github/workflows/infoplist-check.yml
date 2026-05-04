@@ -1,0 +1,36 @@
+name: InfoPlist Permissions Check
+
+on:
+  push:
+    paths:
+      - 'ios/Runner/**InfoPlist.strings'
+      - 'ios/Runner/Info.plist'
+  pull_request:
+    paths:
+      - 'ios/Runner/**InfoPlist.strings'
+      - 'ios/Runner/Info.plist'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for invalid InfoPlist permission keys
+        run: |
+          INVALID_KEYS="NSMicrophoneUsageDescription|NSUserNotificationsUsageDescription"
+          FOUND=$(grep -r --include="InfoPlist.strings" --include="Info.plist" -l "$INVALID_KEYS" ios/Runner/ 2>/dev/null || true)
+
+          if [ -n "$FOUND" ]; then
+            echo "❌ Invalid InfoPlist permission keys found:"
+            grep -r --include="InfoPlist.strings" --include="Info.plist" -n "$INVALID_KEYS" ios/Runner/ || true
+            echo ""
+            echo "NSMicrophoneUsageDescription: remove if app does not use microphone"
+            echo "NSUserNotificationsUsageDescription: not a valid iOS key (notifications use system dialog)"
+            exit 1
+          fi
+
+          echo "✅ No invalid InfoPlist permission keys found"

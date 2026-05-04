@@ -1,0 +1,7 @@
+/* Chinese Traditional localization */
+"CFBundleDisplayName" = "Zone Meet ～跨時區會議時間～";
+"NSUserTrackingUsageDescription" = "追蹤用於顯示個性化廣告。";
+"NSMicrophoneUsageDescription" = "此應用程式不使用音訊功能。";
+"NSPhotoLibraryUsageDescription" = "需要訪問照片庫才能保存照片。";
+"NSCameraUsageDescription" = "需要訪問相機才能拍照。";
+"NSUserNotificationsUsageDescription" = "我們需要通知權限以向您發送重要更新和提醒。";

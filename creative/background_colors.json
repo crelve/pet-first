@@ -1,0 +1,11 @@
+{
+  "style": "simple",
+  "colors": {
+    "primary": "#2196F3",
+    "gradient_start": "#89C4F4",
+    "gradient_end": "#2196F3"
+  },
+  "gradient_angle": 0,
+  "noise_intensity": 0.0,
+  "overlay_opacity": 0.0
+}

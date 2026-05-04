@@ -1,0 +1,11 @@
+感谢您下载我们的应用！
+
+此版本包括：
+- 错误修复和性能改进
+- 增强用户体验
+- 稳定性改进
+
+如有任何问题或反馈，请通过应用内支持与我们联系。
+
+隐私政策: https://kikiki-flutter-template-prod.web.app/privacy.html
+使用条款: https://kikiki-flutter-template-prod.web.app/terms.html

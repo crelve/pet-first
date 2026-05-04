@@ -1,0 +1,305 @@
+name: iOS Deploy to TestFlight
+
+on:
+  # schedule は enable-ci-cron.sh で Step 13 完了後に追加される（アプリごとに時刻が異なる）
+  # cron: アプリ名ハッシュベースで分散化 → engineering/scripts/enable-ci-cron.sh 参照
+  workflow_dispatch:
+    inputs:
+      lane:
+        description: 'Fastlane lane to run'
+        required: false
+        default: 'release'
+        type: string
+      bump_version:
+        description: 'Bump patch version before deploy'
+        required: false
+        default: false
+        type: boolean
+      clean_build:
+        description: 'Clean build (upgrade deps, reinstall pods)'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check if this is a biweekly run
+        id: check-week
+        if: github.event_name == 'schedule'
+        run: |
+          WEEK_NUMBER=$(date +%V)
+          if [ $(( 10#$WEEK_NUMBER % 2 )) -eq 0 ]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            echo "Running on even week: $WEEK_NUMBER"
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+            echo "Skipping odd week: $WEEK_NUMBER"
+          fi
+
+      - name: Skip odd week
+        if: github.event_name == 'schedule' && steps.check-week.outputs.should_run == 'false'
+        run: |
+          echo "Skipping deployment on odd week"
+          exit 0
+
+      - name: Checkout repository
+        if: github.event_name != 'schedule' || steps.check-week.outputs.should_run == 'true'
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bump patch version
+        if: (github.event_name == 'schedule' && steps.check-week.outputs.should_run == 'true') || (github.event_name == 'workflow_dispatch' && inputs.bump_version == true)
+        id: bump
+        run: |
+          # 現在のバージョンを取得
+          CURRENT_VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //' | cut -d'+' -f1)
+          BUILD_NUMBER=$(grep '^version:' pubspec.yaml | sed 's/version: //' | cut -d'+' -f2)
+
+          echo "Current version: $CURRENT_VERSION+$BUILD_NUMBER"
+
+          # バージョンを分解
+          MAJOR=$(echo $CURRENT_VERSION | cut -d'.' -f1)
+          MINOR=$(echo $CURRENT_VERSION | cut -d'.' -f2)
+          PATCH=$(echo $CURRENT_VERSION | cut -d'.' -f3)
+
+          # パッチバージョンとビルド番号をインクリメント
+          NEW_PATCH=$((PATCH + 1))
+          NEW_BUILD_NUMBER=$((BUILD_NUMBER + 1))
+          NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+
+          echo "New version: $NEW_VERSION+$NEW_BUILD_NUMBER"
+
+          # pubspec.yamlを更新
+          sed -i '' "s/^version: .*/version: $NEW_VERSION+$NEW_BUILD_NUMBER/" pubspec.yaml
+
+          # Gitの設定とコミット
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pubspec.yaml
+          git commit -m "chore: bump version to $NEW_VERSION+$NEW_BUILD_NUMBER"
+          git pull --rebase
+          git push
+
+          echo "new_version=$NEW_VERSION+$NEW_BUILD_NUMBER" >> $GITHUB_OUTPUT
+
+      - name: Setup project
+        if: github.event_name != 'schedule' || steps.check-week.outputs.should_run == 'true'
+        run: |
+          export PATH="$HOME/fvm/default/bin:$PATH"
+          # スケジュール実行 or clean_build時はfoundationをupgrade（ユーザープロパティ等の変更を自動反映）
+          if [ "${{ github.event_name }}" = "schedule" ] || ([ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.clean_build }}" = "true" ]); then
+            echo "🔄 Upgrading flutter_foundation (scheduled or clean build)..."
+            flutter pub upgrade flutter_foundation
+          else
+            echo "⚡ Using cached dependencies (incremental build)..."
+            flutter pub get
+          fi
+          dart pub get
+          dart run build_runner build --delete-conflicting-outputs
+          flutter gen-l10n
+
+      - name: Patch sign_in_with_apple for Swift 6.2+
+        if: github.event_name != 'schedule' || steps.check-week.outputs.should_run == 'true'
+        run: |
+          # sign_in_with_apple 7.0.1 lacks cases for Swift 6.2+ (Xcode 16.4+)
+          SIWA_FILE="$HOME/.pub-cache/hosted/pub.dev/sign_in_with_apple-7.0.1/ios/Classes/SignInWithAppleError.swift"
+          if [ -f "$SIWA_FILE" ] && ! grep -q "preferSignInWithApple" "$SIWA_FILE"; then
+            echo "🩹 Patching sign_in_with_apple for Swift 6.2+ compatibility..."
+            sed -i '' '/#if compiler(>=6.0.3)/,/#endif/{
+              /#endif/a\
+          #if compiler(>=6.2)\
+                      case .preferSignInWithApple:\
+                          errorCode = "authorization-error/preferSignInWithApple"\
+                      case .deviceNotConfiguredForPasskeyCreation:\
+                          errorCode = "authorization-error/deviceNotConfiguredForPasskeyCreation"\
+          #endif
+            }' "$SIWA_FILE"
+            echo "✅ Patched successfully"
+          else
+            echo "⏭️ Patch not needed (already applied or file not found)"
+          fi
+
+      - name: Install Fastlane dependencies
+        if: github.event_name != 'schedule' || steps.check-week.outputs.should_run == 'true'
+        run: |
+          export PATH="$HOME/.rbenv/shims:$PATH"
+          # 増分インストールで高速化（clean_build=true時のみupdate）
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.clean_build }}" = "true" ]; then
+            echo "🔄 Updating Fastlane (clean build mode)..."
+            bundle update fastlane
+          fi
+          bundle install
+
+      - name: Generate app icons
+        if: github.event_name != 'schedule' || steps.check-week.outputs.should_run == 'true'
+        run: |
+          export PATH="$HOME/fvm/default/bin:$PATH"
+          # Generate launcher icons from assets/image/logoIcon.png
+          dart run flutter_launcher_icons
+
+      - name: Validate prod AdMob unit IDs
+        if: github.event_name != 'schedule' || steps.check-week.outputs.should_run == 'true'
+        run: |
+          if [ -f scripts/validate-prod-ad-ids.sh ]; then
+            bash scripts/validate-prod-ad-ids.sh dart_env/prod.env
+          else
+            echo "ℹ️ validate-prod-ad-ids.sh not found (Step 11 pending), skipping"
+          fi
+
+      - name: Prepare Flutter iOS config
+        if: github.event_name != 'schedule' || steps.check-week.outputs.should_run == 'true'
+        run: |
+          export PATH="$HOME/fvm/default/bin:$PATH"
+          # Update CocoaPods CDN before flutter build triggers internal pod install
+          pod repo update 2>&1 | tail -3 || true
+          flutter build ios --config-only --release --no-codesign
+
+      - name: Install/Update Pods
+        if: github.event_name != 'schedule' || steps.check-week.outputs.should_run == 'true'
+        working-directory: ios
+        run: |
+          # 増分インストールで高速化（clean_build=true時のみクリーン）
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.clean_build }}" = "true" ]; then
+            echo "🧹 Clean installing Pods (clean build mode)..."
+            rm -rf Pods Podfile.lock
+            pod install --repo-update
+          elif [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "🧹 Clean installing Pods (scheduled build)..."
+            rm -rf Pods Podfile.lock
+            pod install --repo-update
+          else
+            echo "⚡ Incremental Pods install (using cache)..."
+            pod install --repo-update
+          fi
+
+      - name: Regenerate provisioning profiles (temporary)
+        if: github.event_name != 'schedule' || steps.check-week.outputs.should_run == 'true'
+        working-directory: ios
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          ASC_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          export PATH="$HOME/.rbenv/shims:$PATH"
+
+          # キーチェーンをアンロックし、自動ロックを無効化
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" ~/Library/Keychains/login.keychain-db
+          security set-keychain-settings -lut 7200 ~/Library/Keychains/login.keychain-db
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" ~/Library/Keychains/login.keychain-db
+
+          echo "🔄 Regenerating provisioning profiles with updated capabilities..."
+          bundle exec fastlane regenerate_profiles || echo "⚠️  Profile regeneration failed, continuing with existing profiles"
+
+      - name: Upload screenshots to App Store Connect
+        if: false
+        # if: hashFiles('screenshots/**/*.png') != '' && (github.event_name != 'workflow_dispatch' || inputs.skip_screenshots == false)
+        working-directory: ios
+        timeout-minutes: 60
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          ASC_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          export PATH="$HOME/.rbenv/shims:$HOME/fvm/default/bin:$PATH"
+
+          START_TIME=$(date +%s)
+          echo "📤 Uploading manually prepared screenshots to App Store Connect..."
+          echo "📅 Start time: $(date '+%Y-%m-%d %H:%M:%S')"
+
+          # キーチェーンをアンロックし、自動ロックを無効化（60分）
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" ~/Library/Keychains/login.keychain-db
+          security set-keychain-settings -lut 3600 ~/Library/Keychains/login.keychain-db
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" ~/Library/Keychains/login.keychain-db
+
+          echo "🌍 Uploading: ALL LANGUAGES (screenshots found in screenshots/ directory)"
+          echo "⏱️  Expected time: 10-15 minutes"
+          bundle exec fastlane upload_screenshots || { echo "❌ Upload failed"; exit 1; }
+
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - START_TIME))
+          echo ""
+          echo "✅ Screenshot upload completed!"
+          echo "⏱️  Duration: $((DURATION / 60))m $((DURATION % 60))s"
+          echo "📅 End time: $(date '+%Y-%m-%d %H:%M:%S')"
+          echo "🔗 Check: https://appstoreconnect.apple.com"
+
+      - name: Deploy to TestFlight/App Store
+        if: github.event_name != 'schedule' || steps.check-week.outputs.should_run == 'true'
+        working-directory: ios
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          ASC_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          export PATH="$HOME/.rbenv/shims:$HOME/fvm/default/bin:$PATH"
+
+          # キーチェーンをアンロックし、自動ロックを無効化（7200秒 = 2時間）
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" ~/Library/Keychains/login.keychain-db
+          security set-keychain-settings -lut 7200 ~/Library/Keychains/login.keychain-db
+
+          # codesignツールが秘密鍵を使用できるように権限を設定
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" ~/Library/Keychains/login.keychain-db
+
+          LANE="${{ inputs.lane }}"
+          if [ "${{ github.event_name }}" = "schedule" ] || [ -z "$LANE" ]; then
+            # スケジュール実行 or レーン未指定は本番リリース
+            bundle exec fastlane release
+          else
+            # 手動実行は指定したレーン
+            bundle exec fastlane "$LANE"
+          fi
+
+      - name: Sync promotional text
+        if: github.event_name != 'schedule' || steps.check-week.outputs.should_run == 'true'
+        continue-on-error: true
+        run: |
+          # アプリの bundle_id を取得
+          BUNDLE_ID=$(grep 'PRODUCT_BUNDLE_IDENTIFIER' ios/Runner.xcodeproj/project.pbxproj | head -1 | sed 's/.*= "\(.*\)".*/\1/' | sed 's/\.RunnerTests//')
+
+          if [ -z "$BUNDLE_ID" ]; then
+            echo "⚠️ Could not detect bundle_id, skipping promo text sync"
+            exit 0
+          fi
+
+          PROMO_SCRIPT="$HOME/kikiki/released/company/marketing/campaigns/apply-promotional-text.py"
+          if [ ! -f "$PROMO_SCRIPT" ]; then
+            echo "⚠️ Promo text script not found at $PROMO_SCRIPT, skipping"
+            exit 0
+          fi
+
+          echo "📝 Syncing promotional text for bundle_id: $BUNDLE_ID"
+          python3 "$PROMO_SCRIPT" --apply --bundle-id "$BUNDLE_ID" || echo "⚠️ Promo text sync failed (non-blocking)"
+
+      - name: Cleanup build artifacts
+        if: always()
+        run: |
+          echo "🧹 Cleaning up build artifacts to save disk space..."
+          # ワークスペースのビルド成果物を削除（ソースは次回checkoutで再取得）
+          # Keep the workspace directory itself (and .git) so actions/checkout@v4
+          # post-action cleanup can still spawn node (v20/v24) with cwd=$GITHUB_WORKSPACE.
+          find "$GITHUB_WORKSPACE" -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} + 2>/dev/null || true
+          # Xcode DerivedDataを削除（プロジェクトごとに肥大化する）
+          rm -rf ~/Library/Developer/Xcode/DerivedData || true
+          # Defensive: guarantee $GITHUB_WORKSPACE and .git exist for actions/checkout@v4
+          # post-action. The runner has been observed to lose the workspace subtree
+          # between this step and the post-checkout step, causing ENOENT on
+          # spawn(node, cwd=$GITHUB_WORKSPACE). mkdir -p is a no-op if already present.
+          mkdir -p "$GITHUB_WORKSPACE/.git" 2>/dev/null || true
+          echo "✅ Cleanup done. Shared caches (.pub-cache, .cocoapods) are preserved."

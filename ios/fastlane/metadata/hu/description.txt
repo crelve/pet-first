@@ -1,0 +1,23 @@
+Üdvözöljük a Test App-ban!
+
+Egy erőteljes és intuitív alkalmazás, melynek célja, hogy megkönnyítse az életed.
+
+【Főbb Jellemzők】
+- Egyszerű és intuitív felhasználói felület
+- Gyors és hatékony teljesítmény
+- Biztonságos adattárolás
+- Rendszeres frissítések és fejlesztések
+- Sötét mód támogatás
+
+【Tökéletes】
+- Bárki számára, aki megbízható megoldást keres
+- Felhasználóknak, akik értékelik az egyszerűséget és a hatékonyságot
+- Azoknak, akik egyszerűsíteni szeretnék a munkafolyamataikat
+
+【Adatvédelem és Biztonság】
+Az adataid biztonságosan tárolódnak az eszközödön.
+
+Adatvédelmi Szabályzat: https://kikiki-flutter-template-prod.web.app/privacy.html
+Felhasználási Feltételek: https://kikiki-flutter-template-prod.web.app/terms.html
+
+Töltse le most és tapasztalja meg a különbséget!

@@ -1,0 +1,23 @@
+Chào mừng bạn đến với Test App!
+
+Một ứng dụng mạnh mẽ và trực quan được thiết kế để làm cho cuộc sống của bạn dễ dàng hơn.
+
+【Tính năng chính】
+- Giao diện người dùng đơn giản và trực quan
+- Hiệu suất nhanh chóng và hiệu quả
+- Lưu trữ dữ liệu an toàn
+- Cập nhật và cải tiến thường xuyên
+- Hỗ trợ chế độ tối
+
+【Hoàn hảo cho】
+- Bất kỳ ai đang tìm kiếm một giải pháp đáng tin cậy
+- Người dùng coi trọng sự đơn giản và hiệu quả
+- Những người muốn hợp lý hóa quy trình làm việc của họ
+
+【Quyền riêng tư và bảo mật】
+Dữ liệu của bạn được lưu trữ an toàn trên thiết bị của bạn.
+
+Chính sách bảo mật: https://kikiki-flutter-template-prod.web.app/privacy.html
+Điều khoản sử dụng: https://kikiki-flutter-template-prod.web.app/terms.html
+
+Tải xuống ngay và trải nghiệm sự khác biệt!

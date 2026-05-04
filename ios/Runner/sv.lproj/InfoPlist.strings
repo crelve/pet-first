@@ -1,0 +1,7 @@
+/* Swedish localization */
+"CFBundleDisplayName" = "Zone Meet – Bästa Mötestid";
+"NSUserTrackingUsageDescription" = "Spårning används för att visa personliga annonser.";
+"NSMicrophoneUsageDescription" = "Den här appen använder inte ljudfunktioner.";
+"NSPhotoLibraryUsageDescription" = "Åtkomst till fotobiblioteket krävs för att spara foton.";
+"NSCameraUsageDescription" = "Åtkomst till kameran krävs för att ta foton.";
+"NSUserNotificationsUsageDescription" = "Vi behöver behörighet för aviseringar för att skicka viktiga uppdateringar och varningar till dig.";

@@ -1,0 +1,11 @@
+A minimalist geometric F letter logo in Material Blue #2196F3,
+flat vector style, simple clean design,
+centered on solid pure white #FFFFFF background,
+square format 1:1 aspect ratio,
+suitable for app splash screen.
+
+Avoid: text, letters, words, gradients, shadows,
+complex details, transparency, checkered patterns,
+photo-realistic elements, 3D effects.
+
+Output: 512x512px PNG, logo on white background.

@@ -1,0 +1,7 @@
+/* Indonesian localization */
+"CFBundleDisplayName" = "Zone Meet – Jam Rapat Tepat";
+"NSUserTrackingUsageDescription" = "Pelacakan digunakan untuk menampilkan iklan yang dipersonalisasi.";
+"NSMicrophoneUsageDescription" = "Aplikasi ini tidak menggunakan fitur audio.";
+"NSPhotoLibraryUsageDescription" = "Akses perpustakaan foto diperlukan untuk menyimpan foto.";
+"NSCameraUsageDescription" = "Akses kamera diperlukan untuk mengambil foto.";
+"NSUserNotificationsUsageDescription" = "Kami memerlukan izin notifikasi untuk mengirimkan pembaruan dan peringatan penting kepada Anda.";

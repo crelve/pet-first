@@ -1,0 +1,23 @@
+Selamat datang di Aplikasi Uji!
+
+Aplikasi yang kuat dan intuitif, dirancang untuk membuat hidup Anda lebih mudah.
+
+【Fitur Utama】
+- Antarmuka pengguna yang sederhana dan intuitif
+- Performa yang cepat dan efisien
+- Penyimpanan data yang aman
+- Pembaruan dan peningkatan berkala
+- Dukungan mode gelap
+
+【Sempurna Untuk】
+- Siapa pun yang mencari solusi yang andal
+- Pengguna yang menghargai kesederhanaan dan efisiensi
+- Orang yang ingin merampingkan alur kerja mereka
+
+【Privasi & Keamanan】
+Data Anda disimpan dengan aman di perangkat Anda.
+
+Kebijakan Privasi: https://kikiki-flutter-template-prod.web.app/privacy.html
+Ketentuan Penggunaan: https://kikiki-flutter-template-prod.web.app/terms.html
+
+Unduh sekarang dan rasakan perbedaannya!

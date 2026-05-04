@@ -1,0 +1,11 @@
+앱을 다운로드해 주셔서 감사합니다!
+
+이 버전에는 다음이 포함됩니다:
+- 버그 수정 및 성능 개선
+- 향상된 사용자 경험
+- 안정성 개선
+
+질문이나 피드백이 있으시면 앱 내 지원을 통해 문의해 주세요.
+
+개인정보 처리방침: https://kikiki-flutter-template-prod.web.app/privacy.html
+이용약관: https://kikiki-flutter-template-prod.web.app/terms.html

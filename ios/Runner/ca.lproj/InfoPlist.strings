@@ -1,0 +1,7 @@
+/* Catalan localization */
+"CFBundleDisplayName" = "Zone Meet – Millor Hora";
+"NSUserTrackingUsageDescription" = "El seguiment s'utilitza per mostrar anuncis personalitzats.";
+"NSMicrophoneUsageDescription" = "Aquesta aplicació no utilitza funcions d'àudio.";
+"NSPhotoLibraryUsageDescription" = "Es requereix accés a la biblioteca de fotos per desar fotos.";
+"NSCameraUsageDescription" = "Es requereix accés a la càmera per fer fotos.";
+"NSUserNotificationsUsageDescription" = "Necessitem permís de notificacions per enviar-te actualitzacions i alertes importants.";

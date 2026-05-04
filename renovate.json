@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "group:all"
+  ],
+  "dependencyDashboardApproval": false,
+  "timezone": "Asia/Tokyo",
+  "schedule": [
+    "before 5am on the first day of the month"
+  ],
+  "enabledManagers": [
+    "pub"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "baseBranchPatterns": [
+    "main"
+  ],
+  "branchPrefix": "renovate/",
+  "branchConcurrentLimit": 5,
+  "rangeStrategy": "replace",
+  "rebaseWhen": "conflicted",
+  "lockFileMaintenance": {
+    "enabled": false
+  },
+  "reviewers": [
+    "key-712"
+  ]
+}

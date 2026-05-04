@@ -1,0 +1,7 @@
+/* Hungarian localization */
+"CFBundleDisplayName" = "Zone Meet – Tökéletes Időpont";
+"NSUserTrackingUsageDescription" = "A követés személyre szabott hirdetések megjelenítésére szolgál.";
+"NSMicrophoneUsageDescription" = "Ez az alkalmazás nem használ hangfunkciókat.";
+"NSPhotoLibraryUsageDescription" = "A fényképek mentéséhez fényképtár-hozzáférés szükséges.";
+"NSCameraUsageDescription" = "A fényképek készítéséhez kamera-hozzáférés szükséges.";
+"NSUserNotificationsUsageDescription" = "Értesítési engedélyre van szükségünk, hogy fontos frissítéseket és figyelmeztetéseket küldhessünk Önnek.";

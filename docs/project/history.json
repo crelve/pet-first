@@ -1,0 +1,32 @@
+{
+  "app_name": "pet-first",
+  "display_name": "Pet First",
+  "category": "Medical / Health & Fitness (Pets)",
+  "concept": "犬・猫の異常症状から3秒で緊急度判定（赤/黄/緑）+応急処置ガイド表示。深夜パニック対応のオフライン完全対応アプリ",
+  "primary_target": "20-50代のペットオーナー、深夜の急変対応",
+  "score": 3.8,
+  "status": "building",
+  "decision": "GO",
+  "created_at": "2026-03-25",
+  "started_at": "2026-05-04",
+  "bundle_id": "pet.first",
+  "package_name": "pet_first",
+  "github_repo": "crelve/pet-first",
+  "spec_path": "company/planning/specs/pet-first-spec.md",
+  "series": ["first-aid"],
+  "ai_used": false,
+  "monetization": {
+    "monthly_price_jpy": 480,
+    "monthly_price_usd": 3.99,
+    "yearly_price_jpy": 3900,
+    "yearly_price_usd": 27.99,
+    "lifetime_price_jpy": 4980,
+    "lifetime_price_usd": 29.99,
+    "admob": ["banner", "interstitial"]
+  },
+  "release_target": "2026-04",
+  "competitors": [
+    {"name": "Pet First Aid by Red Cross", "rating": 3.5, "weakness": "UIが古い、情報過多"},
+    {"name": "PetMD Symptom Checker", "rating": 3.3, "weakness": "応急処置ガイドなし"}
+  ]
+}

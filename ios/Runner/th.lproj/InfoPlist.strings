@@ -1,0 +1,7 @@
+/* Thai localization */
+"CFBundleDisplayName" = "Zone Meet – เวลาประชุมที่ดี";
+"NSUserTrackingUsageDescription" = "การติดตามใช้เพื่อแสดงโฆษณาส่วนบุคคล";
+"NSMicrophoneUsageDescription" = "แอปนี้ไม่ใช้ฟีเจอร์เสียง";
+"NSPhotoLibraryUsageDescription" = "จำเป็นต้องเข้าถึงคลังรูปภาพเพื่อบันทึกรูปภาพ";
+"NSCameraUsageDescription" = "จำเป็นต้องเข้าถึงกล้องเพื่อถ่ายภาพ";
+"NSUserNotificationsUsageDescription" = "เราต้องการสิทธิ์การแจ้งเตือนเพื่อส่งการอัปเดตและการแจ้งเตือนที่สำคัญให้กับคุณ";
