@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- アプリのメインブランドカラー - プライマリーアクション、ボタン、ハイライトに使用 -->
-    <color name="main">#1976D2</color>
+    <color name="main">#6FA572</color>
 
     <!-- プライマリーカラー - メインの文字色、アイコン、重要な要素に使用 -->
-    <color name="primary">#212121</color>
+    <color name="primary">#2D3E2E</color>
 
     <!-- プログレスバー、ローディングインジケーターに使用 -->
-    <color name="progress">#1976D2</color>
+    <color name="progress">#6FA572</color>
 
     <!-- セカンダリ背景、カード背景、微妙な区切りに使用 -->
     <color name="blueGrey">#F5F5F5</color>
@@ -22,7 +22,7 @@
     <color name="error">#F44336</color>
 
     <!-- アクセントカラー - セカンダリアクション、強調表示に使用 -->
-    <color name="accent">#FF6F00</color>
+    <color name="accent">#FF6B6B</color>
 
     <!-- セカンダリテキスト、サブタイトル、無効状態に使用 -->
     <color name="secondary">#757575</color>
@@ -50,13 +50,13 @@
     <color name="appleGray">#8E8E93</color>
 
     <!-- サブスクリプション画面用カラー（プロダクトごとにカスタマイズ可能） -->
-    <color name="subscriptionPrimary">#1E88E5</color>
-    <color name="subscriptionAccent">#FF8A65</color>
-    <color name="subscriptionBadge">#4CAF50</color>
-    <color name="subscriptionGradientStart">#E3F2FD</color>
+    <color name="subscriptionPrimary">#6FA572</color>
+    <color name="subscriptionAccent">#FF6B6B</color>
+    <color name="subscriptionBadge">#FFB347</color>
+    <color name="subscriptionGradientStart">#F0F7F0</color>
     <color name="subscriptionGradientMiddle">#FAFAFA</color>
-    <color name="subscriptionGradientEnd">#E1F5FE</color>
-    <color name="subscriptionText">#263238</color>
+    <color name="subscriptionGradientEnd">#E8F2E8</color>
+    <color name="subscriptionText">#2D3E2E</color>
 
     <!-- 追加の色 -->
     <color name="grey">#9E9E9E</color>

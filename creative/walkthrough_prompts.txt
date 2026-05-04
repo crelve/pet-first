@@ -1,44 +1,47 @@
 =========================================
-Walkthrough Screen 1 (Welcome)
+Walkthrough Screen 1 (Pick Your Pet)
 =========================================
 
-A friendly welcome illustration for mobile app onboarding,
-smiling character with welcome gesture and Flutter logo elements,
-flat illustration style, soft pastel colors with Material Blue #2196F3 accents,
+A friendly illustration of a cute dog and a cat side by side, both looking gently at the viewer,
+flat illustration style, Calm Sage Green #6FA572 color accents with soft warm tones,
 centered composition on solid pure white #FFFFFF background,
-portrait format 9:16 aspect ratio, clean modern aesthetic.
+portrait format 9:16 aspect ratio, calming reassuring aesthetic.
+The pets should look healthy and approachable — conveys "your beloved pet, cared for".
 
 Avoid: text, letters, words, gradients, colored backgrounds,
-complex scenes, photo-realistic elements.
+complex scenes, photo-realistic elements, scary or distressed pets.
 
 Output: 375x667px PNG, mobile onboarding screen.
 
 =========================================
-Walkthrough Screen 2 (Features)
+Walkthrough Screen 2 (Symptom → Triage)
 =========================================
 
-A feature showcase illustration for mobile app onboarding,
-icons representing key app development features arranged neatly (code, design, deploy),
-flat illustration style, Material Blue #2196F3 color scheme,
+A clean illustration of a stylized symptom checklist with three traffic-light style indicators,
+red circle with exclamation, amber circle, green checkmark — arranged vertically on a card,
+small paw print icon at the top of the card,
+flat illustration style, Calm Sage Green #6FA572 with Coral Red #FF6B6B and Warm Amber #FFB347 accents,
 centered composition on solid pure white #FFFFFF background,
-portrait format 9:16 aspect ratio, clean informative design.
+portrait format 9:16 aspect ratio, clear informative design.
+Conveys "instant triage: emergency / observe / home care".
 
 Avoid: text, letters, words, gradients, colored backgrounds,
-cluttered layouts, photo-realistic elements.
+cluttered layouts, photo-realistic elements, blood or graphic medical imagery.
 
 Output: 375x667px PNG, mobile onboarding screen.
 
 =========================================
-Walkthrough Screen 3 (Get Started)
+Walkthrough Screen 3 (First Aid Steps)
 =========================================
 
-A call-to-action illustration for mobile app onboarding,
-pointing hand or arrow with checkmark in Material Blue #2196F3,
-flat illustration style, vibrant Material Blue #2196F3 accents,
+A reassuring illustration of a numbered step-by-step guide card with a small paw print and heart icon,
+three numbered circles connected by a gentle line,
+flat illustration style, Calm Sage Green #6FA572 main color with Coral Red #FF6B6B heart accent,
 centered composition on solid pure white #FFFFFF background,
-portrait format 9:16 aspect ratio, encouraging energetic mood.
+portrait format 9:16 aspect ratio, encouraging supportive mood.
+Conveys "follow these steps confidently — we're with you".
 
 Avoid: text, letters, words, gradients, colored backgrounds,
-complex elements, photo-realistic elements.
+complex elements, photo-realistic elements, scary medical scenes.
 
 Output: 375x667px PNG, mobile onboarding screen.

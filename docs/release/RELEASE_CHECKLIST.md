@@ -11,11 +11,11 @@
  
 
 **Step 01: 以下のどちらかを選択**
-- [ ] `/release:step:01-guided-init` - **対話型**（アイデアがある時）
-- [ ] `/release:step:01-project-init` - **完全自動**（ゼロから探索）
-- [ ] `/release:step:02-brand-color-setup` - ブランドカラー設定
-- [ ] `/release:step:03-app-icons-images-guide` - アイコン・画像作成
-- [ ] `/release:step:04-screen-structure` - 画面構成設計
+- [x] `/release:step:01-guided-init` - **対話型**（アイデアがある時）
+- [x] `/release:step:01-project-init` - **完全自動**（ゼロから探索）
+- [x] `/release:step:02-brand-color-setup` - ブランドカラー設定
+- [x] `/release:step:03-app-icons-images-guide` - アイコン・画像作成
+- [x] `/release:step:04-screen-structure` - 画面構成設計
 - [ ] `/release:step:05-project-deploy` - デプロイ
 - [ ] `/release:step:06-setup-auto-implementation` - Issues作成・環境構築
 - [ ] `/release:step:07-implement-issue` - Issue自動実装

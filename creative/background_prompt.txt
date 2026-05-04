@@ -1,16 +1,17 @@
-A clean minimal background for mobile app screenshots,
-solid uniform color Material Blue #2196F3,
+A clean reassuring background for mobile app screenshots,
+smooth vertical gradient from soft sage #F5F9F5 at top
+to Calm Sage Green #6FA572 at bottom,
 portrait format 1290x2796px,
-smooth even gradient from lighter blue #89C4F4 at top to Material Blue #2196F3 at bottom,
-subtle professional aesthetic.
+calming family-friendly aesthetic suggesting pet care, safety, and gentle guidance.
 
 CRITICAL REQUIREMENTS:
 - Size: EXACTLY 1290x2796 pixels (portrait)
 - Smooth vertical gradient (top to bottom)
 - No text, no icons, no decorative elements
-- Professional and clean appearance
+- Calming and trustworthy appearance
 
 Avoid: text, letters, icons, symbols, complex patterns,
-photo elements, illustrations, decorative graphics.
+photo elements, illustrations, decorative graphics, harsh red tones,
+hard edges, garish bright colors.
 
 Output: 1290x2796px PNG, clean gradient background only.

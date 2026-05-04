@@ -1,4 +1,5 @@
-A minimalist geometric F letter logo in Material Blue #2196F3,
+A minimalist pet paw print symbol with a small Coral Red #FF6B6B heart in its center,
+paw print rendered in Calm Sage Green #6FA572,
 flat vector style, simple clean design,
 centered on solid pure white #FFFFFF background,
 square format 1:1 aspect ratio,
@@ -9,3 +10,4 @@ complex details, transparency, checkered patterns,
 photo-realistic elements, 3D effects.
 
 Output: 512x512px PNG, logo on white background.
+The combined paw + heart conveys gentle pet care and emergency first-aid readiness.

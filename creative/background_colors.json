@@ -1,11 +1,15 @@
 {
-  "style": "simple",
+  "app_name": "pet-first",
+  "category": "pet-healthcare",
+  "background_pattern": "calm-gradient",
+  "gradient_direction": "vertical",
   "colors": {
-    "primary": "#2196F3",
-    "gradient_start": "#89C4F4",
-    "gradient_end": "#2196F3"
+    "top": "#F5F9F5",
+    "bottom": "#6FA572"
   },
-  "gradient_angle": 0,
-  "noise_intensity": 0.0,
-  "overlay_opacity": 0.0
+  "size": {
+    "width": 1290,
+    "height": 2796
+  },
+  "rationale": "Soft Sage → Calm Sage Green の縦グラデで「ペット応急処置の安心感・癒し」を表現。深夜の不安を鎮めるトーン"
 }
