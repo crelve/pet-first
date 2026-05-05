@@ -209,8 +209,7 @@ jobs:
           bundle exec fastlane regenerate_profiles || echo "⚠️  Profile regeneration failed, continuing with existing profiles"
 
       - name: Upload screenshots to App Store Connect
-        if: false
-        # if: hashFiles('screenshots/**/*.png') != '' && (github.event_name != 'workflow_dispatch' || inputs.skip_screenshots == false)
+        if: hashFiles('screenshots/**/*.png') != '' && (github.event_name != 'workflow_dispatch' || inputs.skip_screenshots == false)
         working-directory: ios
         timeout-minutes: 60
         env:
