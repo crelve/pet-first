@@ -56,6 +56,13 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Validate metadata names (early check)
+        if: github.event_name != 'schedule' || steps.check-week.outputs.should_run == 'true'
+        run: |
+          echo "🔍 Pre-check: Validating metadata names..."
+          python3 scripts/validate-metadata-names.py || { echo "❌ Metadata validation failed!"; exit 1; }
+
+
       - name: Bump patch version
         if: (github.event_name == 'schedule' && steps.check-week.outputs.should_run == 'true') || (github.event_name == 'workflow_dispatch' && inputs.bump_version == true)
         id: bump
