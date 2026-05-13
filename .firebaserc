@@ -1,7 +1,5 @@
 {
   "projects": {
-    "default": "kikiki-flutter-template-prod",
-    "prod": "kikiki-flutter-template-prod",
-    "dev": "kikiki-flutter-template-dev"
+    "prod": "kikiki-apps-overflow5-prod"
   }
 }

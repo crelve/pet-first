@@ -1,7 +1,7 @@
 {
   "file_generated_by": "FlutterFire CLI",
-  "purpose": "FirebaseAppId & ProjectId for this Firebase project. This file should be committed to source control.",
-  "GOOGLE_APP_ID": "1:513162290068:ios:5a3548ba2f5a8f5ea5a581",
-  "FIREBASE_PROJECT_ID": "kikiki-flutter-template-prod",
-  "GCM_SENDER_ID": "513162290068"
+  "purpose": "FirebaseAppId & ProjectId for this Firebase project.",
+  "GOOGLE_APP_ID": "1:535068404458:ios:50092325f0b84d30a7c593",
+  "FIREBASE_PROJECT_ID": "kikiki-apps-overflow5-prod",
+  "GCM_SENDER_ID": "535068404458"
 }

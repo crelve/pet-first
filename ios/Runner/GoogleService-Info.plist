@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyAoYd0zrg-NdqEJK55sC21T4ahjzoKzcGs</string>
+	<string>AIzaSyDKeXvsSXL3KiGtvCF3RGZZwHhP_6nrwp4</string>
 	<key>GCM_SENDER_ID</key>
-	<string>513162290068</string>
+	<string>535068404458</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>kikiki.flutter.template.prod</string>
+	<string>pet.first</string>
 	<key>PROJECT_ID</key>
-	<string>kikiki-flutter-template-prod</string>
+	<string>kikiki-apps-overflow5-prod</string>
 	<key>STORAGE_BUCKET</key>
-	<string>kikiki-flutter-template-prod.firebasestorage.app</string>
+	<string>kikiki-apps-overflow5-prod.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:513162290068:ios:5a3548ba2f5a8f5ea5a581</string>
+	<string>1:535068404458:ios:50092325f0b84d30a7c593</string>
 </dict>
 </plist>
